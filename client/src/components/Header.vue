@@ -3,7 +3,8 @@
     <div class="header-inner">
       <div class="logo">
         <a href="">
-          <img src="../assets/logo-full-wht.svg" alt="logo">
+          <img src="../assets/logo.svg" alt="logo">
+          <h1>Lux Auction</h1>
         </a>
       </div>
       <div class="tools">
@@ -35,10 +36,22 @@
     justify-content: space-between;
   }
 
+  header .header-inner .logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   header .header-inner .logo img{
     object-fit: contain;
     width: auto;
     height: 64px;
+  }
+
+  header .header-inner .logo h1 {
+    font-size: 32px;
+    color: white;
+    transition: all 0.3s ease;
   }
 
   header .header-inner .tools {
@@ -53,9 +66,10 @@
     transition: all 0.3s ease;
   }
 
-  header .header-inner .tools h2:hover {
+  header .header-inner .tools h2:hover,
+  header .header-inner .logo a:hover h1{
     cursor: pointer;
-    color: #C99A23;
+    color: #d3ac07;
   }
 
 </style>
