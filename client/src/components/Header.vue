@@ -1,10 +1,32 @@
+<script setup>
+  import { ref, onMounted, onUnmounted } from 'vue';
+
+  // Reactive variable to track the scroll state
+  const isScrolled = ref(false);
+
+  // Function to handle the scroll event
+  const handleScroll = () => {
+    isScrolled.value = window.scrollY > 20;
+  };
+
+  // Set up the event listener when the component mounts
+  onMounted(() => {
+    window.addEventListener("scroll", handleScroll);
+  });
+
+  // Clean up the event listener when the component unmounts
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
+</script>
+
 <template>
-  <header class="header">
+  <header :class="{ 'scrolled': isScrolled }">
     <div class="header-inner">
       <div class="logo">
         <a href="">
           <img src="../assets/logo.svg" alt="logo">
-          <h1>Lux Auction</h1>
+          <h1>Lux Auctions</h1>
         </a>
       </div>
       <div class="tools">
@@ -13,6 +35,7 @@
       </div>
     </div>
   </header>
+  <div :class="{ 'scrolled': isScrolled }" class="line-effect"></div>
 </template>
 
 <style scoped>
@@ -25,8 +48,32 @@
     position: fixed;
     top: 0;
     left: 0;
-    border-bottom: 4px solid #FFD00C;
+    background: transparent;
+    z-index: 999;
+    transition: background 0.3s ease;
+  }
+
+  header.scrolled {
     background: black;
+  }
+
+  .line-effect {
+    position: fixed;
+    top: calc(64px + 4vw);
+    background: transparent;
+    height: 4px;
+    width: 100%;
+    transition: background 0.3s ease;
+  }
+
+  .line-effect.scrolled {
+    position: fixed;
+    top: calc(64px + 4vw);
+    background: linear-gradient(90deg, #745811, #F5B81F, #BC973A, #C99A23, #BC973A, #745811);
+    height: 4px;
+    width: 100%;
+    transition: background 0.3s ease;
+    z-index: 1000;
   }
 
   header .header-inner {
@@ -70,6 +117,12 @@
   header .header-inner .logo a:hover h1{
     cursor: pointer;
     color: #d3ac07;
+  }
+
+  @media (max-width: 640px) {
+    header .header-inner .logo h1 {
+      display: none;
+    }
   }
 
 </style>
