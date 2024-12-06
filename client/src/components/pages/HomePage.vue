@@ -1,10 +1,13 @@
 <script setup>
 import AuctionCard from "@/components/AuctionCard.vue";
 import HowItWorks from "@/components/HowItWorks.vue";
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 import "animate.css";
 </script>
 
 <template>
+  <Header></Header>
   <div class="contents">
     <video class="presentation animate__animated animate__fadeInDown" autoplay muted>
       <source src="../../assets/apresentacao.mp4" type="video/mp4" />
@@ -26,6 +29,7 @@ import "animate.css";
 
     <HowItWorks></HowItWorks>
   </div>
+  <Footer></Footer>
 </template>
 
 <style scoped>

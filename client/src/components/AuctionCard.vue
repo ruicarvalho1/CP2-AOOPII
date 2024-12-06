@@ -3,19 +3,19 @@
 </script>
 
 <template>
-  <a href="" class="auction-card">
+  <router-link to="/auction-page" class="auction-card">
     <img src="../assets/lambo.jpeg" alt="product">
     <div class="info">
       <h3>Lamborghini Aventador SV</h3>
-      <h3>Licitação Inicial: 300,000€</h3>
-      <h4>Vendido por: Premium Autos</h4>
+      <h3><span class="mobile-text">Licitação Inicial:</span> 300,000€</h3>
+      <h4><span class="mobile-text">Vendido por:</span> Premium Autos</h4>
       <h4>Vencedor: António Costa</h4>
     </div>
-<!--    CLASSE ended DEFINE O BACKGROUND A VERMELHO NO CASO DE ESTAR ENCERRADO O LEILAO-->
+      <!--    CLASSE ended DEFINE O BACKGROUND A VERMELHO NO CASO DE ESTAR ENCERRADO O LEILAO-->
     <div class="state">
       <h4>Aberto</h4>
     </div>
-  </a>
+  </router-link>
 </template>
 
 <style scoped>
@@ -72,5 +72,11 @@
 
   .auction-card .state.ended {
     background: rgba(255, 0, 0, 0.27);
+  }
+  
+  @media (max-width: 540px) {
+    .mobile-text {
+      display: none;
+    }
   }
 </style>

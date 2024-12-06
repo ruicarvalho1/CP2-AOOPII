@@ -31,7 +31,7 @@
       </router-link>
       <div class="tools">
         <router-link to="/auctions"><h2>Leilões</h2></router-link>
-        <router-link to="/"><h2 id="acc">Conta</h2></router-link>
+        <h2 id="acc">Conta</h2>
       </div>
     </div>
   </header>

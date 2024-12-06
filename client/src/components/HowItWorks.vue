@@ -1,5 +1,5 @@
 <template>
-  <div class="how-works animate__animated animate__fadeInUp">
+  <div class="how-works">
       <h1>Como funciona?</h1>
     <div class="steps">
       <div class="step">
@@ -55,5 +55,26 @@
   .how-works .steps .step p {
     margin-top: 10px;
     text-align: center;
+  }
+  
+  @media (max-width: 840px) {
+    .how-works {
+      padding: 0 16px;
+    }
+
+    .how-works .steps {
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      gap: 10px;
+    }
+
+    .how-works h1 {
+      font-size: 40px;
+    }
+
+    .how-works .steps .step {
+      width: 100%;
+    }
   }
 </style>

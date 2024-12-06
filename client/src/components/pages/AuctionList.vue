@@ -1,10 +1,12 @@
 <script setup>
-
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 import AuctionCard from "@/components/AuctionCard.vue";
 import HowItWorks from "@/components/HowItWorks.vue";
 </script>
 
 <template>
+  <Header></Header>
   <div class="contents">
     <div class="banner animate__animated animate__fadeInDown">
       <img src="../../assets/auction-banner.jpg">
@@ -30,6 +32,7 @@ import HowItWorks from "@/components/HowItWorks.vue";
     </div>
     <HowItWorks></HowItWorks>
   </div>
+  <Footer></Footer>
 </template>
 
 <style scoped>
