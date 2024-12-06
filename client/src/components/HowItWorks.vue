@@ -1,5 +1,5 @@
 <template>
-  <div class="how-works">
+  <div class="how-works animate__animated animate__fadeInUp">
       <h1>Como funciona?</h1>
     <div class="steps">
       <div class="step">

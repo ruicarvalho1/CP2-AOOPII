@@ -23,15 +23,15 @@
 <template>
   <header :class="{ 'scrolled': isScrolled }">
     <div class="header-inner">
-      <div class="logo">
+      <router-link to="/" class="logo">
         <a href="">
           <img src="../assets/logo.svg" alt="logo">
           <h1>Lux Auctions</h1>
         </a>
-      </div>
+      </router-link>
       <div class="tools">
-        <h2>Leilões</h2>
-        <h2 id="acc">Conta</h2>
+        <router-link to="/auctions"><h2>Leilões</h2></router-link>
+        <router-link to="/"><h2 id="acc">Conta</h2></router-link>
       </div>
     </div>
   </header>

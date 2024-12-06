@@ -2,12 +2,12 @@
   <footer class="footer">
     <div class="line"></div>
     <div class="container">
-      <div class="logo">
+      <router-link to="/" class="logo">
         <a href="">
           <img src="../assets/logo.svg" alt="logo">
           <h1>Lux Auctions</h1>
         </a>
-      </div>
+      </router-link>
       <div class="infos">
         <a href="">
           <h3>Leilões</h3>

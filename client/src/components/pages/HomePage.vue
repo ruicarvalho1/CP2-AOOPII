@@ -7,11 +7,11 @@ import "animate.css";
 <template>
   <div class="contents">
     <video class="presentation animate__animated animate__fadeInDown" autoplay muted>
-      <source src="../assets/apresentacao.mp4" type="video/mp4" />
+      <source src="../../assets/apresentacao.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
-    <div class="top-auctions">
+    <div class="top-auctions animate__animated animate__fadeInUp">
       <h1>Mais populares:</h1>
       <div class="auctions">
         <auction-card></auction-card>
