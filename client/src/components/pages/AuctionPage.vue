@@ -11,10 +11,11 @@ import Footer from "@/components/Footer.vue";
     <h1>Lamborghini Aventador SV LP750-4 6.5 V12</h1>
     <div class="auction-infos">
       <div class="product">
-        <div class="product">
+        <div class="product-img">
           <img src="../../assets/lambo.jpeg" alt="product">
         </div>
         <div class="description-div">
+          <h2>Descrição do produto:</h2>
           <h5>Overview about the Lamborghini Aventador LP 750-4 SV: <br>
             The Lamborghini Aventador LP 750-4 SV is a limited edition supercar, restricted to just 600 units worldwide. Presented in the vibrant "Arancio Atlas" color, this vehicle's interior features a luxurious Nero Cosmus and Arancio Leonis Alcantara finish. With only 6,683 miles on the odometer and an extended Lamborghini manufacturer’s warranty until February 2025, this Aventador represents an extraordinary opportunity for collectors and enthusiasts. Equipped with a naturally aspirated 6.5-liter V12 engine producing 750 horsepower and coupled with a 7-speed ISR automated manual transmission, it offers unparalleled performance and driving dynamics.
             <br><br>
@@ -141,7 +142,21 @@ import Footer from "@/components/Footer.vue";
         </div>
       </div>
       <div class="auction-bidding">
-
+        <div class="bidding-container">
+          <h2>Licitação atual</h2>
+          <h1>349.999€</h1>
+          <div class="bid-div">
+            <h3>Introduza a sua licitação:</h3>
+            <div class="bid-input">
+              <input placeholder="Montante...">
+              <h1>€</h1>
+            </div>
+            <div class="raise-error error">
+              <h4>Licitação necessita de ser superior ao valor atual</h4>
+            </div>
+            <button class="confirm">Confirmar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -157,17 +172,124 @@ import Footer from "@/components/Footer.vue";
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-top: calc(64px + 4vw);
   }
 
   .auction-contents .auction-infos {
     display: flex;
-    flex-direction: column;
     width: 80%;
+    margin-top: 20px;
+    position: relative;
+    gap: 32px;
   }
 
   .auction-contents .auction-infos .product,
   .auction-contents .auction-infos .auction-bidding {
     width: 50%;
+  }
+
+  .auction-contents .auction-infos .product .product-img {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  .auction-contents .auction-infos .product .product-img img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease-in;
+    z-index: 998;
+  }
+
+  .auction-contents .auction-infos .product .product-img img:hover {
+    scale: 1.75;
+    left: 50%;
+    top: 20%;
+  }
+
+  .auction-contents .auction-infos .description-div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .auction-contents .auction-infos .auction-bidding {
+    position: relative;
+  }
+
+  .auction-contents .auction-infos .auction-bidding .bidding-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: calc(132px + 4vw);
+  }
+
+  .auction-contents .auction-infos .auction-bidding .bidding-container .bid-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  .auction-contents .auction-infos .auction-bidding .bidding-container .bid-div input {
+    width: 100%;
+    height: 48px;
+    color: black;
+    padding: 16px 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: 2px solid black;
+    font-weight: 600;
+    box-shadow: 2px 2px 8px rgba(232, 170, 29, 0.5);
+  }
+
+  .bid-div .bid-input {
+    display: flex;
+    position: relative;
+    width: 70%;
+    margin-top: 10px;
+  }
+
+  .bid-div .bid-input h1{
+    position: absolute;
+    right: 16px;
+  }
+
+  .bid-div .confirm {
+    width: 50%;
+    height: 48px;
+    background: black;
+    color: white;
+    border: none;
+    font-size: 28px;
+    box-shadow: 2px 2px 8px rgba(232, 170, 29, 0.2);
+    transition: all 0.3s ease;
+    margin-top: 22px;
+  }
+
+  .bid-div .confirm:hover {
+    cursor: pointer;
+    color: #d3ac07;
+    scale: 1.02;
+  }
+
+   .error {
+    display: none;
+    padding: 8px;
+    background: rgba(255, 0, 0, 0.27);
+     margin-top: 10px;
+  }
+
+  .raise-error.error {
+    display: flex;
   }
 
 </style>
