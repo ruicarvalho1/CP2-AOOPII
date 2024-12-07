@@ -7,6 +7,11 @@ import Register from '../components/pages/Register.vue';
 
 const routes = [
     {
+        path: '/login',
+        name: 'Login',
+        component: Login ,
+    },
+    {
         path: '/',
         name: 'Home',
         component: Home,
@@ -20,11 +25,6 @@ const routes = [
         path: '/auction-page',
         name: 'AuctionPage',
         component: AuctionPage ,
-    },
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login ,
     },
     {
         path: '/register',
