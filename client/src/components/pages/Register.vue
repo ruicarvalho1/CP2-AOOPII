@@ -1,9 +1,52 @@
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 
-const validate_register = () => {
-  //VALIDACAO DE register RETORNA TRUE OU FALSE PARA A CLASSE SER APLICADA NO ELEMENTO DE ERRO
-  ref(false);
+const firstName = ref('');
+const lastName = ref('');
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const creditCard = ref('');
+
+const firstNameError = ref(false);
+const lastNameError = ref(false);
+const usernameError = ref(false);
+const passwordError = ref(false);
+const creditCardError = ref(false);
+
+const validateRegister = () => {
+  firstNameError.value = firstName.value.trim() === '';
+  lastNameError.value = lastName.value.trim() === '';
+  usernameError.value = username.value.length < 3;
+  passwordError.value = password.value.length < 8;
+  creditCardError.value = creditCard.value.length !== 16;
+  return !(firstNameError.value || lastNameError.value || usernameError.value || passwordError.value || creditCardError.value);
+};
+
+const handleSubmit = async () => {
+  if (validateRegister()) {
+    const userData = {
+      first_name: firstName.value,
+      last_name: lastName.value,
+      email: email.value,
+      username: username.value,
+      auth: {
+        platform: 'website',
+        password: password.value,
+      },
+      credit_card: creditCard.value,
+    };
+
+    try {
+      const response = await axios.post('http://localhost:3000/auth/register', userData);
+      console.log('Registro bem-sucedido:', response.data);
+    } catch (error) {
+      console.error('Erro no registro:', error.response ? error.response.data : error.message);
+    }
+  } else {
+    console.log('Formulário inválido!');
+  }
 };
 </script>
 
@@ -12,34 +55,73 @@ const validate_register = () => {
     <div class="register-form">
       <div class="form">
         <h1>Criar conta</h1>
-        <div class="name">
+
+        <!-- Nome -->
+        <div class="username">
           <h3>Nome:</h3>
-          <input class="register-input" type="text" placeholder="O seu nome">
-          <div :class="{ 'raise-error-name': validate_register}" class="error">
+          <input v-model="firstName" class="register-input" type="text" placeholder="O seu nome">
+          <div :class="{ 'raise-error-name': firstNameError }" class="error">
             <h5>Nome inválido</h5>
           </div>
         </div>
+
+        <!-- Sobrenome -->
+        <div class="username">
+          <h3>Sobrenome:</h3>
+          <input v-model="lastName" class="register-input" type="text" placeholder="Sobrenome">
+          <div :class="{ 'raise-error-name': lastNameError }" class="error">
+            <h5>Sobrenome inválido</h5>
+          </div>
+        </div>
+
+
         <div class="username">
           <h3>Nome de utilizador:</h3>
-          <input class="register-input" type="text" placeholder="Nome utilizador">
-          <div :class="{ 'raise-error-user': validate_register}" class="error">
+          <input v-model="username" class="register-input" type="text" placeholder="Nome utilizador">
+          <div :class="{ 'raise-error-user': usernameError }" class="error">
             <h5>Nome de utilizador inválido</h5>
           </div>
         </div>
+
+
+        <div class="username">
+          <h3>Email:</h3>
+          <input v-model="email" class="register-input" type="email" placeholder="Email">
+          <div :class="{ 'raise-error-email': !email }" class="error">
+            <h5>Email inválido</h5>
+          </div>
+        </div>
+
+
         <div class="password">
           <h3>Palavra-passe:</h3>
-          <input class="register-input" type="password" placeholder="●●●●●●●●">
-          <div :class="{ 'raise-error-pass': validate_register}" class="error">
+          <input v-model="password" class="register-input" type="password" placeholder="●●●●●●●●">
+          <div :class="{ 'raise-error-pass': passwordError }" class="error">
             <h5>Palavra passe deve ter pelo menos 8 caracteres</h5>
           </div>
         </div>
-        <button class="register-btn">Criar conta</button>
+
+
+        <div class="username">
+          <h3>Cartão de crédito:</h3>
+          <input v-model="creditCard" class="register-input" type="text" placeholder="Número do cartão de crédito">
+          <div :class="{ 'raise-error-credit-card': creditCardError }" class="error">
+            <h5>Cartão de crédito inválido</h5>
+          </div>
+        </div>
+
+        <!-- Botão de registro -->
+        <button @click="handleSubmit" class="register-btn">Criar conta</button>
       </div>
-      <h4>Já tem conta? <router-link to="/login" class="login-btn">Iniciar sessão</router-link></h4>
+
+      <h4>Já tem conta?
+        <router-link to="/login" class="login-btn">Iniciar sessão</router-link>
+      </h4>
     </div>
+
     <div class="presentation">
       <video class="presentation-vid animate__animated animate__fadeInRight" autoplay muted loop>
-        <source src="../../assets/login.mp4" type="video/mp4" />
+        <source src="../../assets/login.mp4" type="video/mp4"/>
         Your browser does not support the video tag.
       </video>
     </div>
@@ -47,6 +129,7 @@ const validate_register = () => {
 </template>
 
 <style scoped>
+
 .register-page {
   display: flex;
   width: 100%;
@@ -108,8 +191,7 @@ const validate_register = () => {
 .register-page .register-form .form .password,
 .register-page .register-form .form .name input,
 .register-page .register-form .form .username input,
-.register-page .register-form .form .password input
-{
+.register-page .register-form .form .password input {
   width: 100%;
 }
 
@@ -150,7 +232,8 @@ const validate_register = () => {
 
 .register-page .register-form .raise-error-name.error,
 .register-page .register-form .raise-error-user.error,
-.register-page .register-form .raise-error-pass.error {
+.register-page .register-form .raise-error-pass.error,
+.register-page .register-form .raise-error-credit-card.error {
   display: flex;
 }
 
