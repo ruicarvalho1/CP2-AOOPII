@@ -8,7 +8,7 @@ import {
     deleteStudent,
     updateStudent,
     createStudent
-} from '../Controllers/UserController.js';
+} from '../Controllers/userController.js';
 import * as path from "node:path";
 
 const router = Router();
