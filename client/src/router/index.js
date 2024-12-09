@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/pages/HomePage.vue';
 import Login from '../components/pages/Login.vue';
 import Register from '../components/pages/Register.vue';
+import Auctions from '../components/pages/AuctionList.vue';
+import AuctionPage from '../components/pages/AuctionPage.vue';
+
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('jwt');
@@ -49,6 +52,18 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/auctions',
+        name: 'Auctions',
+        component: Auctions ,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/auction-page',
+        name: 'AuctionPage',
+        component: AuctionPage ,
         meta: { requiresAuth: true },
     },
 ];

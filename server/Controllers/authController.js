@@ -33,12 +33,12 @@ export const login = async (req, res) => {
 
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).json({ message: 'Usuário ou senha inválidos' });
+            return res.status(401).json({ message: 'User ou senha inválidos' });
         }
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Usuário ou senha inválidos' });
+            return res.status(401).json({ message: 'User ou senha inválidos' });
         }
 
         const token = generateToken(user);
@@ -47,4 +47,8 @@ export const login = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Erro ao realizar login', error: err.message });
     }
+};
+
+export const logout = async(req, res) => {
+    res.status(200).json({ message: 'Logout bem-sucedido' });
 };

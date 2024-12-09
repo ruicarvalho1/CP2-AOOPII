@@ -13,7 +13,12 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
