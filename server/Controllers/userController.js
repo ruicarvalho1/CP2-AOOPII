@@ -1,4 +1,4 @@
-import User from '../models/UserModel.js';
+import User from '../Models/userModel.js';
 import { verifyToken } from '../config/jwtConfig.js';
 
 
@@ -7,7 +7,7 @@ export const getProfile = async (req, res) => {
         const token = req.headers.authorization?.split(' ')[1]; // Bearer token
 
         if (!token) {
-            return res.status(401).json({ message: 'Acesso negado, token não fornecido' });
+            return res.status(401).json({ message: 'Erro no Token' });
         }
 
         const decoded = verifyToken(token);
@@ -15,12 +15,12 @@ export const getProfile = async (req, res) => {
         const user = await User.findById(decoded.id).select('-auth.password'); // Não retornar a senha
 
         if (!user) {
-            return res.status(404).json({ message: 'Usuário não encontrado' });
+            return res.status(404).json({ message: 'User não encontrado' });
         }
 
 
         res.json({ user });
     } catch (err) {
-        res.status(500).json({ message: 'Erro ao recuperar o perfil', error: err.message });
+        res.status(500).json({ message: 'Erro ao encontrar o perfil', error: err.message });
     }
 };
