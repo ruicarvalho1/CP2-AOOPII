@@ -191,7 +191,6 @@ const toggleEdit = () => {
     border: 2px solid black;
     font-weight: 600;
     background: white;
-    /*CAS*/
   }
 
   .account-contents .profile .profile-info .input-section input:disabled {
