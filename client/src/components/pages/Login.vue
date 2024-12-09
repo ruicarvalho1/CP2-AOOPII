@@ -66,7 +66,7 @@ export default {
 
       if (!username.value || !password.value) {
         isError.value = true;
-        errorMessage.value = 'Por favor, preencha ambos os campos.';
+        errorMessage.value = 'Por favor, preencha todos os campos.';
         return;
       }
 
@@ -89,7 +89,7 @@ export default {
       } catch (error) {
 
         isError.value = true;
-        errorMessage.value = 'Falha ao realizar login. Tente novamente.';
+        errorMessage.value = 'Falha no login. Tente novamente.';
       }
     };
 
