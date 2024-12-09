@@ -32,6 +32,11 @@
       <div class="tools">
         <router-link to="/auctions"><h2>Leilões</h2></router-link>
         <h2 id="acc">Conta</h2>
+        <div id="acc-popout">
+          <h3>Bem-vindo, utilizador</h3>
+          <router-link to="/profile"><h3>Perfil</h3></router-link>
+          <router-link to="/login"><h3>Terminar sessão</h3></router-link>
+        </div>
       </div>
     </div>
   </header>
@@ -81,6 +86,7 @@
     width: 100%;
     align-items: center;
     justify-content: space-between;
+    position: relative;
   }
 
   header .header-inner .logo a {
@@ -117,6 +123,13 @@
   header .header-inner .logo a:hover h1{
     cursor: pointer;
     color: #d3ac07;
+  }
+
+  #acc-popout {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
   }
 
   @media (max-width: 640px) {
