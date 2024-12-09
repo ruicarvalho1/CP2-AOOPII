@@ -1,58 +1,10 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-// Definindo as variáveis reativas
-const username = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const isError = ref(false);  // Controla se deve exibir a mensagem de erro
-
-// Usando o Vue Router para navegação
-const router = useRouter();
-
-// Função para lidar com o login
-const handleLogin = async () => {
-  if (!username.value || !password.value) {
-    isError.value = true;
-    errorMessage.value = 'Por favor, preencha ambos os campos.';
-    return;
-  }
-
-  try {
-    const response = await fetch('http://localhost:3000/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem('token', data.token);
-      router.push('/profile');
-    } else {
-      isError.value = true;
-      errorMessage.value = data.message || 'Falha ao iniciar sessão.';
-    }
-  } catch (error) {
-    console.error('Erro no login:', error);
-    isError.value = true;
-    errorMessage.value = 'Erro ao realizar login, tente novamente.';
-  }
-};
-</script>
-
 <template>
   <div class="login-page">
     <div class="login-form">
       <div class="form">
         <h1>Iniciar sessão</h1>
+
+
         <div class="username">
           <h3>Nome de utilizador:</h3>
           <input
@@ -60,8 +12,10 @@ const handleLogin = async () => {
               class="login-input"
               type="text"
               placeholder="Nome utilizador"
+              required
           />
         </div>
+
         <div class="password">
           <h3>Palavra-passe:</h3>
           <input
@@ -69,19 +23,21 @@ const handleLogin = async () => {
               class="login-input"
               type="password"
               placeholder="●●●●●●●●"
+              required
           />
         </div>
 
-        <!-- Exibe a mensagem de erro se isError for verdadeiro -->
+
         <div v-if="isError" class="error">
           <h5>{{ errorMessage }}</h5>
         </div>
 
-        <!-- Botão de Login -->
         <button @click="handleLogin" class="login-btn">Iniciar sessão</button>
       </div>
 
-      <h4>Não tem conta? <router-link to="/register" class="register-btn">Registar</router-link></h4>
+      <h4>Não tem conta?
+        <router-link to="/register" class="register-btn">Registar</router-link>
+      </h4>
     </div>
 
     <div class="presentation">
@@ -93,8 +49,57 @@ const handleLogin = async () => {
   </div>
 </template>
 
+<script>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+export default {
+  setup() {
+    const username = ref('');
+    const password = ref('');
+    const errorMessage = ref('');
+    const isError = ref(false);
+    const router = useRouter();
+
+    const handleLogin = async () => {
+
+      if (!username.value || !password.value) {
+        isError.value = true;
+        errorMessage.value = 'Por favor, preencha todos os campos.';
+        return;
+      }
+
+      try {
+
+        const response = await axios.post('http://localhost:3000/auth/login', {
+          username: username.value,
+          password: password.value,
+        });
+
+        if (response.data.token) {
+
+          localStorage.setItem('jwt', response.data.token);
+          router.push('/home');
+        } else {
+
+          isError.value = true;
+          errorMessage.value = 'Credenciais inválidas';
+        }
+      } catch (error) {
+
+        isError.value = true;
+        errorMessage.value = 'Falha no login. Tente novamente.';
+      }
+    };
+
+    return { username, password, errorMessage, isError, handleLogin };
+  },
+};
+</script>
+
 <style scoped>
-/* Estilos para a página de login */
+
 .login-page {
   display: flex;
   width: 100%;

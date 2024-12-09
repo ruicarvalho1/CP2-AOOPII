@@ -1,4 +1,4 @@
-import User from '../models/UserModel.js';
+import User from '../Models/userModel.js';
 import { verifyToken } from '../config/jwtConfig.js';
 
 
