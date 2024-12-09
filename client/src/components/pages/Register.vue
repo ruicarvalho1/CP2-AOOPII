@@ -79,27 +79,17 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const firstName = ref('');
-const lastName = ref('');
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const creditCard = ref('');
+const userSchema = z.object({
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  email: z.string().email(),
+  username: z.string().min(4),
+  password: z.string().min(8),
+  creditCard: z.string().min(16),
+})
 
-const firstNameError = ref(false);
-const lastNameError = ref(false);
-const usernameError = ref(false);
-const passwordError = ref(false);
-const creditCardError = ref(false);
 
-const validateRegister = () => {
-  firstNameError.value = firstName.value.trim() === '';
-  lastNameError.value = lastName.value.trim() === '';
-  usernameError.value = username.value.length < 3;
-  passwordError.value = password.value.length < 8;
-  creditCardError.value = creditCard.value.length !== 16;
-  return !(firstNameError.value || lastNameError.value || usernameError.value || passwordError.value || creditCardError.value);
-};
+
 
 const handleSubmit = async () => {
   if (validateRegister()) {
