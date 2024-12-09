@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import axios from 'axios';
 import {z} from "zod";
 
@@ -88,8 +88,6 @@ const userSchema = z.object({
   password: z.string().min(8),
   creditCard: z.string().min(16),
 })
-
-
 
 
 const handleSubmit = async () => {
