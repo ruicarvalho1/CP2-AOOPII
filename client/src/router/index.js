@@ -4,6 +4,7 @@ import Auctions from '../components/pages/AuctionList.vue';
 import AuctionPage from '../components/pages/AuctionPage.vue';
 import Login from '../components/pages/Login.vue';
 import Register from '../components/pages/Register.vue';
+import Account from '../components/pages/Account.vue';
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
         path: '/register',
         name: 'Register',
         component: Register ,
+    },
+    {
+        path: '/account',
+        name: 'Account',
+        component: Account ,
     },
 ];
 
