@@ -5,7 +5,7 @@
         <h1>Criar conta</h1>
 
 
-        <div class="username">
+        <div class="input-section">
           <h3>Nome:</h3>
           <input v-model="firstName" class="register-input" type="text" placeholder="O seu nome">
           <div :class="{ 'raise-error-name': firstNameError }" class="error">
@@ -14,16 +14,16 @@
         </div>
 
 
-        <div class="username">
-          <h3>Sobrenome:</h3>
-          <input v-model="lastName" class="register-input" type="text" placeholder="Sobrenome">
+        <div class="input-section">
+          <h3>Apelido:</h3>
+          <input v-model="lastName" class="register-input" type="text" placeholder="O seu apelido">
           <div :class="{ 'raise-error-name': lastNameError }" class="error">
-            <h5>Sobrenome inválido</h5>
+            <h5>Apelido inválido</h5>
           </div>
         </div>
 
 
-        <div class="username">
+        <div class="input-section">
           <h3>Nome de utilizador:</h3>
           <input v-model="username" class="register-input" type="text" placeholder="Nome utilizador">
           <div :class="{ 'raise-error-user': usernameError }" class="error">
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Email -->
-        <div class="username">
+        <div class="input-section">
           <h3>Email:</h3>
           <input v-model="email" class="register-input" type="email" placeholder="Email">
           <div :class="{ 'raise-error-email': !email }" class="error">
@@ -41,7 +41,7 @@
         </div>
 
 
-        <div class="password">
+        <div class="input-section">
           <h3>Palavra-passe:</h3>
           <input v-model="password" class="register-input" type="password" placeholder="●●●●●●●●">
           <div :class="{ 'raise-error-pass': passwordError }" class="error">
@@ -50,7 +50,7 @@
         </div>
 
 
-        <div class="username">
+        <div class="input-section">
           <h3>Cartão de crédito:</h3>
           <input v-model="creditCard" class="register-input" type="text" placeholder="Número do cartão de crédito">
           <div :class="{ 'raise-error-credit-card': creditCardError }" class="error">
@@ -76,8 +76,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import axios from 'axios';
+import {z} from "zod";
 
 const userSchema = z.object({
   firstName: z.string().min(2),
@@ -87,8 +88,6 @@ const userSchema = z.object({
   password: z.string().min(8),
   creditCard: z.string().min(16),
 })
-
-
 
 
 const handleSubmit = async () => {
@@ -171,22 +170,16 @@ const handleSubmit = async () => {
   border: 2px solid black;
 }
 
-.register-page .register-form .form .name {
+.register-page .register-form .form .input-section:first-child {
   margin-top: 32px;
 }
 
-.register-page .register-form .form .name,
-.register-page .register-form .form .username,
-.register-page .register-form .form .password,
-.register-page .register-form .form .name input,
-.register-page .register-form .form .username input,
-.register-page .register-form .form .password input {
+.register-page .register-form .form .input-section,
+.register-page .register-form .form .input-section input {
   width: 100%;
 }
 
-.register-page .register-form .form .name input,
-.register-page .register-form .form .username input,
-.register-page .register-form .form .password input {
+.register-page .register-form .form .input-section input {
   height: 48px;
   color: black;
   padding: 16px 8px;
