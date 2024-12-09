@@ -190,6 +190,7 @@ const toggleEdit = () => {
     margin-bottom: 10px;
     border: 2px solid black;
     font-weight: 600;
+    background: white;
   }
 
   .account-contents .profile .profile-info .input-section input:disabled {
@@ -201,6 +202,7 @@ const toggleEdit = () => {
     margin-bottom: 10px;
     border: none;
     font-weight: 600;
+    background: transparent;
   }
 
   .account-contents .profile .profile-info .error {
