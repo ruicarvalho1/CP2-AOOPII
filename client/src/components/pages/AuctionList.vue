@@ -54,7 +54,7 @@ import HowItWorks from "@/components/HowItWorks.vue";
   .contents .banner img {
     width: 100%;
     height: auto;
-    max-height: 40vh;
+    max-height: 30vh;
     object-fit: cover;
   }
 

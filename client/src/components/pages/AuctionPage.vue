@@ -8,6 +8,9 @@ import Footer from "@/components/Footer.vue";
   <Header></Header>
 
   <div class="auction-contents">
+    <div class="fake-header">
+      <div class="line-effect"></div>
+    </div>
     <h1>Lamborghini Aventador SV LP750-4 6.5 V12</h1>
     <div class="auction-infos">
       <div class="product">
@@ -172,7 +175,24 @@ import Footer from "@/components/Footer.vue";
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: calc(64px + 4vw);
+  }
+
+  .auction-contents .fake-header {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    width: 100%;
+    height: calc(64px + 4vw);
+    background: black;
+    position: relative;
+  }
+
+  .auction-contents .fake-header .line-effect {
+    position: fixed;
+    top: calc(64px + 4vw);
+    background: linear-gradient(90deg, #745811, #F5B81F, #BC973A, #C99A23, #BC973A, #745811);
+    height: 4px;
+    width: 100%;
   }
 
   .auction-contents .auction-infos {
@@ -202,7 +222,7 @@ import Footer from "@/components/Footer.vue";
     top: 0;
     left: 0;
     transition: all 0.3s ease-in;
-    z-index: 998;
+    z-index: 900;
   }
 
   .auction-contents .auction-infos .product .product-img img:hover {

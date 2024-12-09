@@ -11,7 +11,7 @@ const isHovered = ref(false);
 
 // Function to handle the scroll event
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 20;
+  isScrolled.value = window.scrollY > 0;
 };
 
 // Functions to handle hover and click for the popout
@@ -77,6 +77,7 @@ onMounted(() => {
             <router-link to="/account"><h3>Perfil</h3></router-link>
             <h3 @click="logout">Terminar sessão</h3>
             <div class="line-effect-popout"></div>
+            <div class="line-effect-popout-y"></div>
           </div>
         </div>
       </div>
@@ -177,13 +178,13 @@ header .header-inner .logo:hover h1,
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: -10vh;
-  right: -2vw;
+  top: 0;
+  right: -40vw;
   padding: 2vw;
   width: 25vw;
   background: black;
-  transition: top 0.3s ease, opacity 0.2s ease;
-  opacity: 0;
+  transition: all 0.3s ease;
+  margin-top: 64px;
   pointer-events: none;
   visibility: hidden;
 }
@@ -197,12 +198,10 @@ header .header-inner .logo:hover h1,
 
 #acc:hover .acc-popout,
 .acc-popout:hover {
-  opacity: 1;
   pointer-events: all;
   visibility: visible;
-  margin-top: 64px;
   z-index: 1003;
-  top: 0;
+  right: -2vw;
 }
 
 #acc:hover .line-effect.scrolled {
@@ -215,7 +214,7 @@ header .header-inner .logo:hover h1,
   margin-top: 10px;
 }
 
-.acc-popout .line-effect-popout {
+.acc-popout .line-effect-popout, .acc-popout .line-effect-popout-y {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -223,6 +222,11 @@ header .header-inner .logo:hover h1,
   height: 4px;
   width: 100%;
   z-index: 1000;
+}
+
+.acc-popout .line-effect-popout-y {
+  height: calc(100% - 2vw);
+  width: 4px;
 }
 
 @media (max-width: 640px) {
