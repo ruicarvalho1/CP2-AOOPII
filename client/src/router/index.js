@@ -54,19 +54,19 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: false },
     },
     {
         path: '/auctions',
         name: 'Auctions',
         component: Auctions ,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: false },
     },
     {
         path: '/auction-page',
         name: 'AuctionPage',
         component: AuctionPage ,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: false },
     },
     {
         path: '/account',

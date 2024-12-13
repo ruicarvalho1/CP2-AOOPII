@@ -6,7 +6,7 @@ import api from "@/components/axios.js";
 
 
 const editInfo = ref(true);
-
+const profileImg = ref("");
 const firstName = ref("");
 const lastName = ref("");
 const username = ref("");
@@ -22,6 +22,7 @@ const errorMessage = ref("");
 const toggleEdit = () => {
   if (!editInfo.value) {
     // Reset input values to current profile data
+    profileImg.value = profile.value?.user.image_profile || "";
     firstName.value = profile.value?.user.first_name || "";
     lastName.value = profile.value?.user.last_name || "";
     username.value = profile.value?.user.username || "";
@@ -38,6 +39,7 @@ const getProfile = async () => {
     profile.value = response.data;
 
     // Populate input fields with profile data
+    profileImg.value = profile.value?.user.image_profile || "";
     firstName.value = profile.value?.user.first_name || "";
     lastName.value = profile.value?.user.last_name || "";
     username.value = profile.value?.user.username || "";
@@ -52,6 +54,7 @@ const getProfile = async () => {
 
 const updateProfile = async () => {
   const userData = {
+    image_profile: profileImg.value,
     first_name: firstName.value,
     last_name: lastName.value,
     username: username.value,
@@ -96,12 +99,9 @@ onMounted(() => {
         <div class="border">
           <img :src="profile?.user.image_profile" alt="">
         </div>
-      </div>
-      <div class="input-section">
-        <h3>Imagem:</h3>
-        <input v-model="firstName" :disabled="editInfo" class="register-input" type="text" :placeholder="editInfo? `${profile?.user.first_name}` : 'Novo nome'">
-        <div :class="{ 'raise-error-name': firstNameError }" class="error">
-          <h5>Nome inválido</h5>
+        <div v-show="!editInfo" class="input-section">
+          <h3>Imagem:</h3>
+          <input v-model="profileImg" class="register-input" type="text" placeholder="Url da nova imagem de perfil">
         </div>
       </div>
       <div class="profile-info">
@@ -137,7 +137,7 @@ onMounted(() => {
         <div class="input-section">
           <h3>Email:</h3>
           <input v-model="email" :disabled="editInfo" class="register-input" type="email" :placeholder="editInfo? `${profile?.user.email}` : 'Novo email'">
-          <div :class="{ 'raise-error-email': email }" class="error">
+          <div :class="{ 'raise-error-email': raise-error-email }" class="error">
             <h5>Email inválido</h5>
           </div>
         </div>
@@ -222,10 +222,14 @@ onMounted(() => {
 
   .account-contents .profile {
     display: flex;
+    gap: 32px;
     width: 80%;
   }
 
   .account-contents .profile .profile-img {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     width: 50%;
   }
 
@@ -246,6 +250,10 @@ onMounted(() => {
     box-shadow: 2px 2px 8px rgba(236, 170, 18, 0.37);
   }
 
+  .account-contents .profile .profile-info {
+    width: 100%;
+  }
+
   .account-contents .profile .profile-info h2 {
     margin-bottom: 10px;
   }
@@ -259,7 +267,8 @@ onMounted(() => {
     width: 100%;
   }
 
-  .account-contents .profile .profile-info .input-section input {
+  .account-contents .profile .profile-info .input-section input,
+  .account-contents .profile .profile-img input {
     height: 48px;
     color: black;
     padding: 16px 8px;
@@ -269,6 +278,7 @@ onMounted(() => {
     border: 2px solid black;
     font-weight: 600;
     background: white;
+    width: 100%;
   }
 
   .account-contents .profile .profile-info .input-section input:disabled {
