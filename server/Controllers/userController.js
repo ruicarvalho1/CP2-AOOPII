@@ -12,7 +12,7 @@ export const getProfile = async (req, res) => {
 
         const decoded = verifyToken(token);
 
-        const user = await User.findById(decoded.id).select('-auth.password'); // Não retornar a senha
+        const user = await User.findById(decoded.id).select('-auth.password');
 
         if (!user) {
             return res.status(404).json({ message: 'User não encontrado' });
@@ -41,9 +41,9 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: 'User não encontrado' });
         }
 
-        const { profile_image,first_name, last_name, email, username, credit_card } = req.body;
+        const { image_profile,first_name, last_name, email, username, credit_card } = req.body;
 
-        user.profile_image = profile_image;
+        user.image_profile = image_profile;
         user.first_name = first_name;
         user.last_name = last_name;
         user.email = email;
