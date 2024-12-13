@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import dotenv from "dotenv";
 
-const mongoDB = 'mongodb://localhost/trab2db';
+const mongoDB = process.env.MONGO_URI;
 
 export const connectToDatabase = async () => {
     try {

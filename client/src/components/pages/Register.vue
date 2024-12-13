@@ -4,7 +4,6 @@
       <div class="form">
         <h1>Criar conta</h1>
 
-
         <div class="input-section">
           <h3>Nome:</h3>
           <input v-model="firstName" class="register-input" type="text" placeholder="O seu nome">
@@ -12,7 +11,6 @@
             <h5>Nome inválido</h5>
           </div>
         </div>
-
 
         <div class="input-section">
           <h3>Apelido:</h3>
@@ -22,7 +20,6 @@
           </div>
         </div>
 
-
         <div class="input-section">
           <h3>Nome de utilizador:</h3>
           <input v-model="username" class="register-input" type="text" placeholder="Nome utilizador">
@@ -31,7 +28,6 @@
           </div>
         </div>
 
-        <!-- Email -->
         <div class="input-section">
           <h3>Email:</h3>
           <input v-model="email" class="register-input" type="email" placeholder="Email">
@@ -40,7 +36,6 @@
           </div>
         </div>
 
-
         <div class="input-section">
           <h3>Palavra-passe:</h3>
           <input v-model="password" class="register-input" type="password" placeholder="●●●●●●●●">
@@ -48,7 +43,6 @@
             <h5>Palavra passe deve ter pelo menos 8 caracteres</h5>
           </div>
         </div>
-
 
         <div class="input-section">
           <h3>Cartão de crédito:</h3>
@@ -81,14 +75,74 @@ import axios from 'axios';
 import {z} from "zod";
 
 const userSchema = z.object({
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-  email: z.string().email(),
-  username: z.string().min(4),
-  password: z.string().min(8),
-  creditCard: z.string().min(16),
-})
+  firstName: z.string().min(2, "Nome muito curto!"),
+  lastName: z.string().min(2, "Apelido muito curto!"),
+  email: z.string().email("Email inválido!"),
+  username: z.string().min(4, "Nome de utilizador muito curto!"),
+  password: z.string().min(8, "A palavra-passe deve ter pelo menos 8 caracteres!"),
+  creditCard: z.string().length(16, "Número do cartão de crédito inválido!"),
+});
 
+const firstName = ref('');
+const lastName = ref('');
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const creditCard = ref('');
+
+const firstNameError = ref(false);
+const lastNameError = ref(false);
+const usernameError = ref(false);
+const emailError = ref(false);
+const passwordError = ref(false);
+const creditCardError = ref(false);
+
+const validateRegister = () => {
+  try {
+    userSchema.parse({
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      username: username.value,
+      password: password.value,
+      creditCard: creditCard.value,
+    });
+
+    firstNameError.value = false;
+    lastNameError.value = false;
+    usernameError.value = false;
+    emailError.value = false;
+    passwordError.value = false;
+    creditCardError.value = false;
+    return true;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      error.errors.forEach((err) => {
+        switch (err.path[0]) {
+          case "firstName":
+            firstNameError.value = true;
+            break;
+          case "lastName":
+            lastNameError.value = true;
+            break;
+          case "username":
+            usernameError.value = true;
+            break;
+          case "email":
+            emailError.value = true;
+            break;
+          case "password":
+            passwordError.value = true;
+            break;
+          case "creditCard":
+            creditCardError.value = true;
+            break;
+        }
+      });
+    }
+    return false;
+  }
+};
 
 const handleSubmit = async () => {
   if (validateRegister()) {
@@ -117,7 +171,6 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-
 .register-page {
   display: flex;
   width: 100%;

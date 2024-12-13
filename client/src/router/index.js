@@ -52,25 +52,25 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
     },
     {
         path: '/auctions',
         name: 'Auctions',
         component: Auctions ,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
     },
     {
         path: '/auction-page',
         name: 'AuctionPage',
         component: AuctionPage ,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
     },
     {
         path: '/account',
         name: 'Account',
         component: Account ,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
     },
 ];
 

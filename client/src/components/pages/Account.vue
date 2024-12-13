@@ -1,15 +1,86 @@
 <script setup>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import { ref } from 'vue';
+import { onMounted, ref } from "vue";
+import api from "@/components/axios.js";
 
-// Reactive variable to control disabled state
+
 const editInfo = ref(true);
 
-// Function to toggle edit mode
+const firstName = ref("");
+const lastName = ref("");
+const username = ref("");
+const email = ref("");
+const creditCard = ref("");
+
+
+const profile = ref(null);
+const isError = ref(false);
+const errorMessage = ref("");
+
+
 const toggleEdit = () => {
+  if (!editInfo.value) {
+    // Reset input values to current profile data
+    firstName.value = profile.value?.user.first_name || "";
+    lastName.value = profile.value?.user.last_name || "";
+    username.value = profile.value?.user.username || "";
+    email.value = profile.value?.user.email || "";
+    creditCard.value = profile.value?.user.credit_card || "";
+  }
   editInfo.value = !editInfo.value;
 };
+
+
+const getProfile = async () => {
+  try {
+    const response = await api.get("auth/profile", { withCredentials: true });
+    profile.value = response.data;
+
+    // Populate input fields with profile data
+    firstName.value = profile.value?.user.first_name || "";
+    lastName.value = profile.value?.user.last_name || "";
+    username.value = profile.value?.user.username || "";
+    email.value = profile.value?.user.email || "";
+    creditCard.value = profile.value?.user.credit_card || "";
+  } catch (error) {
+    isError.value = true;
+    errorMessage.value = error.response?.data?.message || "Erro no perfil.";
+  }
+};
+
+
+const updateProfile = async () => {
+  const userData = {
+    first_name: firstName.value,
+    last_name: lastName.value,
+    username: username.value,
+    email: email.value,
+    credit_card: creditCard.value,
+  };
+
+  try {
+    const response = await api.put("auth/profile", userData, {
+      withCredentials: true,
+    });
+
+
+    profile.value = response.data;
+
+
+    editInfo.value = true;
+    console.log("Perfil atualizado:", response.data);
+  } catch (error) {
+    console.error(
+        "Erro ao atualizar perfil:",
+        error.response ? error.response.data : error.message
+    );
+  }
+};
+
+onMounted(() => {
+  getProfile();
+});
 </script>
 
 <template>
@@ -23,7 +94,14 @@ const toggleEdit = () => {
     <div class="profile">
       <div class="profile-img">
         <div class="border">
-          <img src="../../assets/profile.jpg_large" alt="">
+          <img :src="profile?.user.image_profile" alt="">
+        </div>
+      </div>
+      <div class="input-section">
+        <h3>Imagem:</h3>
+        <input v-model="firstName" :disabled="editInfo" class="register-input" type="text" :placeholder="editInfo? `${profile?.user.first_name}` : 'Novo nome'">
+        <div :class="{ 'raise-error-name': firstNameError }" class="error">
+          <h5>Nome inválido</h5>
         </div>
       </div>
       <div class="profile-info">
@@ -66,14 +144,14 @@ const toggleEdit = () => {
 
         <div class="input-section">
           <h3>Cartão de crédito:</h3>
-          <input v-model="creditCard" :disabled="editInfo" class="register-input" type="text" :placeholder="editInfo? `${profile?.user.credit}` : 'Novo nome'">
+          <input v-model="creditCard" :disabled="editInfo" class="register-input" type="text" :placeholder="editInfo? `${profile?.user.credit_card}` : 'Novo nome'">
           <div :class="{ 'raise-error-credit-card': creditCardError }" class="error">
             <h5>Cartão de crédito inválido</h5>
           </div>
         </div>
       </div>
     </div>
-    <button @click="toggleEdit" id="save-info-btn" :class="editInfo? 'hide' : 'show'">Guardar</button>
+    <button @click="updateProfile" id="save-info-btn" :class="editInfo ? 'hide' : 'show'">Guardar</button>
   </div>
 
   <Footer></Footer>
