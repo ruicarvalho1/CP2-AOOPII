@@ -41,13 +41,13 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: 'User não encontrado' });
         }
 
-        const { image_profile,first_name, last_name, email, username, credit_card } = req.body;
+        const {first_name, last_name, email, username,image_profile ,credit_card } = req.body;
 
-        user.image_profile = image_profile;
         user.first_name = first_name;
         user.last_name = last_name;
         user.email = email;
         user.username = username;
+        user.image_profile = image_profile;
         user.credit_card = credit_card;
 
         await user.save();
