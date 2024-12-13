@@ -11,7 +11,7 @@ import Footer from "@/components/Footer.vue";
     <div class="fake-header">
       <div class="line-effect"></div>
     </div>
-    <h1>Lamborghini Aventador SV LP750-4 6.5 V12</h1>
+    <h1 class="product-name">Lamborghini Aventador SV LP750-4 6.5 V12</h1>
     <div class="auction-infos">
       <div class="product">
         <div class="product-img">
@@ -195,6 +195,11 @@ import Footer from "@/components/Footer.vue";
     width: 100%;
   }
 
+  .auction-contents .product-name {
+    margin-top: 64px;
+    padding: 0 2vw;
+  }
+
   .auction-contents .auction-infos {
     display: flex;
     width: 80%;
@@ -225,10 +230,9 @@ import Footer from "@/components/Footer.vue";
     z-index: 900;
   }
 
-  .auction-contents .auction-infos .product .product-img img:hover {
+  .auction-contents .auction-infos .product .product-img:hover img {
     scale: 1.75;
     left: 50%;
-    top: 20%;
   }
 
   .auction-contents .auction-infos .description-div {
@@ -311,5 +315,37 @@ import Footer from "@/components/Footer.vue";
   .raise-error.error {
     display: flex;
   }
+  
+  @media (max-width: 800px) {
+    .auction-contents .auction-infos {
+      flex-direction: column-reverse;
+      width: 95%;
+      gap: 20px;
+    }
 
+    .auction-contents .auction-infos .product .product-img img {
+      object-fit: scale-down;
+    }
+
+    .auction-contents .auction-infos .product,
+    .auction-contents .auction-infos .auction-bidding {
+      width: 100%;
+    }
+
+    .auction-contents .auction-infos .product .product-img:hover img {
+      scale: 1;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .auction-contents .product-name {
+      font-size: 24px;
+      margin-top: 32px;
+    }
+    .bid-div .bid-input, .bid-div .confirm {
+      width: 95%;
+    }
+  }
 </style>

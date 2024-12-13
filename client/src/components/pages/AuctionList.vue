@@ -69,11 +69,11 @@ import HowItWorks from "@/components/HowItWorks.vue";
 
   .contents .banner h1 {
     position: absolute;
-    top: 50%;
-    bottom: 50%;
+    bottom: 64px;
     color: white;
     font-size: 50px;
     height: 78px;
+    text-align: center;
   }
 
   .contents .auctions {
@@ -82,6 +82,20 @@ import HowItWorks from "@/components/HowItWorks.vue";
     gap: 16px;
     margin-top: 64px;
     width: 80%;
+  }
+
+  @media (max-width: 640px) {
+    .contents .banner h1 {
+      font-size: 32px;
+      width: 95%;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .contents .banner h1 {
+      bottom: 24px;
+    }
   }
 
   @media (max-width: 1090px) {

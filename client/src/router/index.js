@@ -5,6 +5,8 @@ import Register from '../components/pages/Register.vue';
 import Auctions from '../components/pages/AuctionList.vue';
 import AuctionPage from '../components/pages/AuctionPage.vue';
 import Account from '../components/pages/Account.vue';
+import Dashboard from '../components/pages/Dashboard.vue';
+import AboutUs from '../components/pages/AboutUs.vue';
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('jwt');
@@ -70,7 +72,19 @@ const routes = [
         path: '/account',
         name: 'Account',
         component: Account ,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: false },
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard ,
+        meta: { requiresAuth: false },
+    },
+    {
+        path: '/about-us',
+        name: 'AboutUs',
+        component: AboutUs ,
+        meta: { requiresAuth: false },
     },
 ];
 

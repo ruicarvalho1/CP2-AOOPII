@@ -64,7 +64,7 @@ onMounted(() => {
 <template>
   <header :class="{ 'scrolled': isScrolled || isHovered }">
     <div class="header-inner">
-      <router-link to="/" class="logo">
+      <router-link to="/home" class="logo">
         <img src="../assets/logo.svg" alt="logo">
         <h1>Lux Auctions</h1>
       </router-link>
@@ -177,6 +177,7 @@ header .header-inner .logo:hover h1,
 .acc-popout {
   display: flex;
   flex-direction: column;
+  align-items: end;
   position: absolute;
   top: 0;
   right: -40vw;
@@ -234,7 +235,12 @@ header .header-inner .logo:hover h1,
     display: none;
   }
   .acc-popout {
-    width: 100% !important;
+    padding: 6vw 4vw;
+    width: calc(100% + 4vw) !important;
+  }
+
+  .acc-popout .line-effect-popout-y {
+    display: none;
   }
 
 }
@@ -242,6 +248,8 @@ header .header-inner .logo:hover h1,
 @media (max-width: 991.98px) {
   .acc-popout {
     width: 50vw;
+    right: -100vw;
+    align-items: start;
   }
 
   #acc {

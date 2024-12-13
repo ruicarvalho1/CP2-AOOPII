@@ -221,6 +221,8 @@ const handleSubmit = async () => {
   padding: 32px;
   background: white;
   border: 2px solid black;
+  max-height: 80vh;
+  overflow-y: scroll;
 }
 
 .register-page .register-form .form .input-section:first-child {

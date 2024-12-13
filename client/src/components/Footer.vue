@@ -9,12 +9,12 @@
         </a>
       </router-link>
       <div class="infos">
-        <a href="">
+        <router-link to="/auctions">
           <h3>Leilões</h3>
-        </a>
-        <a href="">
+        </router-link>
+        <router-link to="/about-us">
           <h3>Sobre nós</h3>
-        </a>
+        </router-link>
       </div>
     </div>
   </footer>
@@ -26,7 +26,7 @@
     background: black;
     position: relative;
     align-items: center;
-    padding: 1vw 2vw;
+    padding: 2vw;
     width: 100%;
     height: fit-content;
     top: 0;
@@ -36,7 +36,7 @@
 
   footer .line {
     position: absolute;
-    top: 0;
+    top: -4px;
     left: 0;
     width: 100%;
     height: 4px;
@@ -59,12 +59,13 @@
   footer .container .logo img {
     object-fit: contain;
     width: auto;
-    height: 64px;
+    height: 48px;
   }
 
   footer .container .logo h1 {
     color: white;
     transition: all 0.3s ease;
+    font-size: 26px;
   }
 
   footer .container .infos {
@@ -86,8 +87,24 @@
   }
 
   @media (max-width: 640px) {
+
+    footer {
+      padding: 4vw;
+    }
+
     footer .container .logo h1 {
       display: none;
     }
   }
+
+  @media (max-width: 991.98px) {
+    footer .container .infos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8vw;
+    }
+  }
 </style>
+<script setup lang="ts">
+</script>
