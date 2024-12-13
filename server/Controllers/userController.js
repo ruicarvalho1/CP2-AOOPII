@@ -41,8 +41,9 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: 'User não encontrado' });
         }
 
-        const { first_name, last_name, email, username, credit_card } = req.body;
+        const { profile_image,first_name, last_name, email, username, credit_card } = req.body;
 
+        user.profile_image = profile_image;
         user.first_name = first_name;
         user.last_name = last_name;
         user.email = email;
