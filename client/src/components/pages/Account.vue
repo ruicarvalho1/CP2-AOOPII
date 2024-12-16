@@ -3,6 +3,7 @@ import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { onMounted, ref } from "vue";
 import api from "@/components/axios.js";
+import AuctionHistoryElement from "@/components/AuctionHistoryElement.vue";
 
 
 const editInfo = ref(true);
@@ -149,9 +150,23 @@ onMounted(() => {
             <h5>Cartão de crédito inválido</h5>
           </div>
         </div>
+      <button @click="toggleEdit" id="edit-info-btn-mobile">{{ editInfo ? 'Editar' : 'Cancelar' }}</button>
       </div>
     </div>
     <button @click="updateProfile" id="save-info-btn" :class="editInfo ? 'hide' : 'show'">Guardar</button>
+    <div class="auction-history-section">
+      <h2>Histórico</h2>
+      <div class="history">
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+        <AuctionHistoryElement></AuctionHistoryElement>
+      </div>
+    </div>
   </div>
 
   <Footer></Footer>
@@ -184,6 +199,7 @@ onMounted(() => {
   }
 
   .account-contents #edit-info-btn,
+  #edit-info-btn-mobile,
   .account-contents #save-info-btn {
     display: flex;
     align-self: end;
@@ -201,6 +217,7 @@ onMounted(() => {
   }
 
   .account-contents #edit-info-btn:hover,
+  #edit-info-btn-mobile:hover,
   .account-contents #save-info-btn:hover {
     cursor: pointer;
     color: #d3ac07;
@@ -211,7 +228,7 @@ onMounted(() => {
     display: flex;
   }
 
-  #save-info-btn.hide {
+  #save-info-btn.hide, #edit-info-btn-mobile {
     display: none;
   }
 
@@ -230,12 +247,15 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 50%;
+    width: 100%;
+    aspect-ratio: 1 / 1;
   }
 
   .account-contents .profile .profile-img img {
-    width: 400px;
-    height: 400px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: calc(100% - 8px);
+    max-height: calc(100% - 8px);
     object-fit: cover;
     z-index: 2;
   }
@@ -244,8 +264,8 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 408px;
-    height: 408px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     background: linear-gradient(90deg, #745811, #F5B81F, #BC973A, #C99A23, #BC973A, #745811);
     box-shadow: 2px 2px 8px rgba(236, 170, 18, 0.37);
   }
@@ -260,6 +280,26 @@ onMounted(() => {
 
   .account-contents .profile .profile-info .input-section:first-child {
     margin-top: 32px;
+  }
+
+  .account-contents .profile .profile-info .input-section:has(input:disabled) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    color: black;
+    padding: 16px 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    font-weight: 600;
+    background: white;
+    box-shadow: 2px 2px 8px rgba(236, 170, 18, 0.37);
+  }
+
+  .account-contents .profile .profile-info .input-section h3 {
+    text-wrap: nowrap;
   }
 
   .account-contents .profile .profile-info .input-section,
@@ -287,7 +327,7 @@ onMounted(() => {
     padding: 16px 8px;
     font-size: 16px;
     transition: all 0.3s ease;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     border: none;
     font-weight: 600;
     background: transparent;
@@ -313,6 +353,60 @@ onMounted(() => {
 
   .account-contents .profile .profile-info .input-section input:disabled::placeholder {
     color: black;
+  }
+
+  .auction-history-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 32px 0;
+  }
+
+  .auction-history-section .history {
+    width: 100%;
+    border-top: 2px solid black;
+  }
+
+  .auction-history-section h2 {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 950px) {
+    .account-contents .profile {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .account-contents .profile .profile-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #edit-info-btn-mobile,
+    .account-contents #save-info-btn {
+      align-self: center;
+    }
+
+    .account-contents #edit-info-btn {
+      display: none;
+    }
+
+    #edit-info-btn-mobile {
+      display: flex;
+      margin-bottom: 0;
+    }
+
+    .account-contents .profile {
+      margin-top: 5%;
+    }
+
+    .account-contents .profile,
+    .auction-history-section {
+      width: 95%;
+    }
+
   }
 
 </style>

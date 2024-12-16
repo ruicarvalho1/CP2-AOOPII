@@ -140,7 +140,7 @@ const showDetails = () => {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
-    border: 1px solid black;
+    border-bottom: 2px solid black;
     max-height: 96px;
   }
 
@@ -207,8 +207,6 @@ const showDetails = () => {
     width: 50%;
     min-width: 64px;
     padding: 10px;
-    border-right: 1px solid black;
-    border-left: 1px solid black;
   }
 
   .element .price {
@@ -218,7 +216,6 @@ const showDetails = () => {
     width: 20%;
     min-width: 64px;
     padding: 10px;
-    border-right: 1px solid black;
   }
 
   .element .status {
@@ -228,7 +225,6 @@ const showDetails = () => {
     width: 10%;
     min-width: 32px;
     padding: 10px;
-    border-right: 1px solid black;
   }
 
   .element .actions {
@@ -252,7 +248,7 @@ const showDetails = () => {
       flex-wrap: wrap;
       justify-content: start;
       width: 100%;
-      border: 1px solid black;
+      border-bottom: 2px solid black;
       max-height: none;
     }
 

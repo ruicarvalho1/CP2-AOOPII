@@ -123,7 +123,7 @@ const showCreate = () => {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
-    border: 1px solid black;
+    border-bottom: 2px solid black;
   }
 
   .dash-contents .element .product-img {
@@ -142,8 +142,6 @@ const showCreate = () => {
     width: 50%;
     min-width: 64px;
     padding: 0 5px;
-    border-right: 1px solid black;
-    border-left: 1px solid black;
   }
 
   .dash-contents .element .price {
@@ -153,7 +151,6 @@ const showCreate = () => {
     width: 20%;
     min-width: 32px;
     padding: 0 5px;
-    border-right: 1px solid black;
   }
 
   .dash-contents .element .status {
@@ -163,7 +160,6 @@ const showCreate = () => {
     width: 10%;
     min-width: 32px;
     padding: 0 5px;
-    border-right: 1px solid black;
   }
 
   .dash-contents .element .actions {
@@ -176,6 +172,10 @@ const showCreate = () => {
   }
 
   @media (max-width: 950px) {
+    .auction-list {
+      border-top: 2px solid black;
+    }
+
     .dash-contents .element {
       display: none;
     }

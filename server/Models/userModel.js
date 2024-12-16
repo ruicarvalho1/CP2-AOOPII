@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
     },
     image_profile: {
         type: String,
-        default: 'https://www.gravatar.com/avatar/',
+        default: 'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-grey-photo-placeholder-illustrations-vectors-default-avatar-profile-icon-grey-photo-placeholder-99724602.jpg',
     },
     account_creation_date: {
         type: Date,
