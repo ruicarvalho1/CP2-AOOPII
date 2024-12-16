@@ -408,5 +408,4 @@ onMounted(() => {
     }
 
   }
-
 </style>
