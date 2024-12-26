@@ -44,14 +44,6 @@ const showCreate = () => {
           </div>
         </div>
         <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
-        <DashAuctionItem></DashAuctionItem>
       </div>
     </div>
   </div>

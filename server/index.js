@@ -13,12 +13,12 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-const corsOptions = {
-    origin: 'http://localhost:5173',
-    credentials: true,
-};
+app.use(cors({
+    origin: 'http://localhost:5173', // Permitir o frontend na porta 5173
+    credentials: true, // Habilitar o envio de cookies e tokens de autenticação
+}));
 
-app.use(cors(corsOptions));
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {

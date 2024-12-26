@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+
 
 const auctionSchema = new mongoose.Schema({
     banner_image: {
@@ -77,6 +78,6 @@ const auctionSchema = new mongoose.Schema({
 });
 
 
-const Auction = mongoose.model('Auction', auctionSchema);
+const Auctions = mongoose.model('Auctions', auctionSchema);
 
-module.exports = Auction;
+export default Auctions;

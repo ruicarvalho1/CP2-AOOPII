@@ -1,19 +1,27 @@
 import jwt from 'jsonwebtoken';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'dsadhuksahduksahkdhakdhaksuhdkuashduashdusahduiahfuigdsfgdsilufgdsiufgdsiugfduisg';
+const SECRET_KEY = process.env.JWT_SECRET || 'dsajkhdjsakhdjashdjkashdjashdjashdjashdjkashdjkahsdjkahsdjashdjksahdkjhajkdhsa';
 
-export const generateToken = (user) => {
-    return jwt.sign(
-        { id: user._id, username: user.username, email: user.email },
-        SECRET_KEY,
-        { expiresIn: '1h' }
-    );
+
+const generateToken = (user) => {
+    const payload = {
+        id: user._id,
+        username: user.username,
+        role: user.auth.role,
+    };
+
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
 };
 
 export const verifyToken = (token) => {
     try {
-        return jwt.verify(token, SECRET_KEY);
+        const decoded = jwt.verify(token, SECRET_KEY);
+        console.log("Decoded Token:", decoded);
+        return decoded;
     } catch (err) {
-        throw new Error('Token invalid');
+        console.error("Token verification failed:", err);
+        throw new Error('Token inválido ou expirado');
     }
 };
+
+export { generateToken };

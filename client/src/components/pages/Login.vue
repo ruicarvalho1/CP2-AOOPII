@@ -4,7 +4,6 @@
       <div class="form">
         <h1>Iniciar sessão</h1>
 
-
         <div class="username">
           <h3>Nome de utilizador:</h3>
           <input
@@ -26,7 +25,6 @@
               required
           />
         </div>
-
 
         <div v-if="isError" class="error">
           <h5>{{ errorMessage }}</h5>
@@ -62,8 +60,13 @@ export default {
     const isError = ref(false);
     const router = useRouter();
 
-    const handleLogin = async () => {
 
+    const setAuthHeader = (token) => {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    };
+
+
+    const handleLogin = async () => {
       if (!username.value || !password.value) {
         isError.value = true;
         errorMessage.value = 'Por favor, preencha todos os campos.';
@@ -71,32 +74,51 @@ export default {
       }
 
       try {
-
         const response = await axios.post('http://localhost:3000/auth/login', {
           username: username.value,
           password: password.value,
         });
 
-        if (response.data.token) {
+        console.log('Resposta da API:', response);
 
+        if (response.data.token) {
+          console.log('Token recebido:', response.data.token);
           localStorage.setItem('jwt', response.data.token);
+          setAuthHeader(response.data.token);
+          const token = localStorage.getItem('jwt');
+          console.log('Token no localStorage:', token);
           router.push('/home');
         } else {
 
           isError.value = true;
           errorMessage.value = 'Credenciais inválidas';
+
         }
       } catch (error) {
-
+        console.error('Erro durante o login:', error);
         isError.value = true;
         errorMessage.value = 'Falha no login. Tente novamente.';
       }
     };
 
-    return { username, password, errorMessage, isError, handleLogin };
+
+
+    const logout = () => {
+      localStorage.removeItem('jwt');
+      delete axios.defaults.headers.common['Authorization'];
+      router.push('/login');
+    };
+
+
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      setAuthHeader(token);
+    }
+    return { username, password, errorMessage, isError, handleLogin, logout };
   },
 };
 </script>
+
 
 <style scoped>
 

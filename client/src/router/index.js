@@ -8,7 +8,7 @@ import Account from '../components/pages/Account.vue';
 import Dashboard from '../components/pages/Dashboard.vue';
 import AboutUs from '../components/pages/AboutUs.vue';
 
-const isAuthenticated = () => {
+export const isAuthenticated = () => {
     const token = localStorage.getItem('jwt');
     if (!token) return false;
 
@@ -18,6 +18,18 @@ const isAuthenticated = () => {
         return !isTokenExpired;
     } catch (error) {
         return false;
+    }
+};
+
+export const getUserRole = () => {
+    const token = localStorage.getItem('jwt');
+    if (!token) return null;
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.role;
+    } catch (error) {
+        return null;
     }
 };
 
@@ -59,31 +71,31 @@ const routes = [
     {
         path: '/auctions',
         name: 'Auctions',
-        component: Auctions ,
+        component: Auctions,
         meta: { requiresAuth: true },
     },
     {
         path: '/auction-page',
         name: 'AuctionPage',
-        component: AuctionPage ,
+        component: AuctionPage,
         meta: { requiresAuth: true },
     },
     {
         path: '/account',
         name: 'Account',
-        component: Account ,
+        component: Account,
         meta: { requiresAuth: true },
     },
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: Dashboard ,
-        meta: { requiresAuth: true },
+        component: Dashboard,
+        meta: { requiresAuth: true, requiresRole: 'admin' },
     },
     {
         path: '/about-us',
         name: 'AboutUs',
-        component: AboutUs ,
+        component: AboutUs,
         meta: { requiresAuth: true },
     },
 ];
@@ -96,6 +108,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !isAuthenticated()) {
         next('/login');
+    } else if (to.meta.requiresRole) {
+        const userRole = getUserRole();
+
+        if (userRole !== to.meta.requiresRole) {
+            next('/home');
+        } else {
+            next();
+        }
     } else {
         next();
     }

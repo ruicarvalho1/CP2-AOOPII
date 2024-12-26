@@ -34,12 +34,13 @@ const toggleEdit = () => {
 };
 
 
+
 const getProfile = async () => {
   try {
     const response = await api.get("auth/profile", { withCredentials: true });
     profile.value = response.data;
 
-    // Populate input fields with profile data
+
     profileImg.value = profile.value?.user.image_profile || "";
     firstName.value = profile.value?.user.first_name || "";
     lastName.value = profile.value?.user.last_name || "";
@@ -51,7 +52,6 @@ const getProfile = async () => {
     errorMessage.value = error.response?.data?.message || "Erro no perfil.";
   }
 };
-
 
 const updateProfile = async () => {
   const userData = {
