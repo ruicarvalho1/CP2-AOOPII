@@ -7,7 +7,7 @@
     emit('close');
   };
 
-  // Get today's date in the format YYYY-MM-DD
+
   const today = new Date().toISOString().split('T')[0];
 
 </script>
