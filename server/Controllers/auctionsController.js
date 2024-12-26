@@ -43,8 +43,8 @@ export const createAuction = async (req, res) => {
             product_name,
             description,
             auction_start_value,
-            auction_ended: auction_ended || false, // Valor padrão se não fornecido
-            created_by: decoded.id, // Associar ao usuário autenticado
+            auction_ended: auction_ended || false,
+            created_by: decoded.id,
         });
 
         await newAuction.save();
