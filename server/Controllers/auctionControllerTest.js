@@ -1,12 +1,49 @@
-const WebSocket = require('ws');
-const jwt = require('jsonwebtoken');
-const Auction = require('./models/auction'); // Modelo do Leilão
-const { z } = require('zod');
+import WebSocket from 'ws';
+import jwt from 'jsonwebtoken';
+import Auction from './models/auction';
+import dotenv from 'dotenv';
 
-// Função para verificar o JWT e garantir que o admin está logado
+dotenv.config();
+const jwtsecret = process.env.JWT_SECRET;
+
+class AuctionInstance {
+    constructor(auction_id) {
+        this.auction_id = auction_id;
+        this.auction_visible = false;
+        this.auction_ended = false;
+        this.auction_winner = '';
+        this.auction_participants = [];
+        this.bids = [];
+        this.highest_bid = 0;
+        this.highest_bidder = '';
+    }
+
+    updateBid(user_id, bid_value) {
+        if (bid_value > this.highest_bid) {
+            this.highest_bid = bid_value;
+            this.highest_bidder = user_id;
+            this.bids.push({ user_id, bid_value, date: Date.now() });
+        }
+    }
+
+    async finalize() {
+        const auction = await Auction.findOne({ auction_id: this.auction_id });
+        if (auction) {
+            auction.internal_info.auction_ended = this.auction_ended;
+            auction.internal_info.auction_winner = this.auction_winner;
+            auction.internal_info.auction_participants = this.auction_participants;
+            auction.internal_info.bids = this.bids;
+            auction.prices.auction_end_value = this.highest_bid;
+            await auction.save();
+        }
+    }
+}
+
+const activeAuctions = {};
+
 function verifyAdminJWT(token) {
     try {
-        const decoded = jwt.verify(token, 'my_secret_key');  // Segredo do JWT
+        const decoded = jwt.verify(token, jwtsecret);
         if (decoded.role !== 'admin') {
             throw new Error('Apenas administradores podem acessar este servidor.');
         }
@@ -16,47 +53,39 @@ function verifyAdminJWT(token) {
     }
 }
 
-// Função para verificar o JWT e garantir que o usuário está logado
-function verifyUserJWT(token) {
-    try {
-        const decoded = jwt.verify(token, 'my_secret_key');  // Segredo do JWT
-        if (decoded.role !== 'user') {
-            throw new Error('Apenas usuários podem fazer lances.');
-        }
-        return decoded;
-    } catch (error) {
-        throw new Error('Token inválido ou expirado.');
-    }
-}
-
-// Função para processar lances
 async function processBid(auction_id, user_id, bid, socket) {
-    const auction = await Auction.findOne({ auction_id });
+    let auctionInstance = activeAuctions[auction_id];
 
-    if (!auction) {
-        return socket.send(JSON.stringify({ type: 'error', message: 'Leilão não encontrado' }));
+    if (!auctionInstance) {
+        auctionInstance = new AuctionInstance(auction_id);
+        activeAuctions[auction_id] = auctionInstance;
+
+        const auction = await Auction.findOne({ auction_id });
+        if (auction) {
+            auctionInstance.auction_visible = auction.internal_info.auction_visible;
+            auctionInstance.auction_ended = auction.internal_info.auction_ended;
+            auctionInstance.auction_winner = auction.internal_info.auction_winner;
+            auctionInstance.auction_participants = auction.internal_info.auction_participants;
+            auctionInstance.bids = auction.internal_info.bids;
+            auctionInstance.highest_bid = auction.prices.auction_end_value;
+            auctionInstance.highest_bidder = auction.internal_info.auction_winner;
+        }
     }
 
-    if (auction.internal_info.auction_ended) {
+    if (auctionInstance.auction_ended) {
         return socket.send(JSON.stringify({ type: 'error', message: 'O leilão já terminou' }));
     }
 
-    if (bid > auction.prices.auction_end_value) {
-        auction.prices.auction_end_value = bid;
-        auction.internal_info.auction_winner = user_id;
-        await auction.save();
-        broadcastMessage({
-            auction_id,
-            highestBid: auction.prices.auction_end_value,
-            highestBidder: auction.internal_info.auction_winner,
-            auctionData: auction
-        });
-    } else {
-        return socket.send(JSON.stringify({ type: 'error', message: 'O lance deve ser maior que o lance atual' }));
-    }
+    auctionInstance.updateBid(user_id, bid);
+
+    broadcastMessage({
+        auction_id,
+        highestBid: auctionInstance.highest_bid,
+        highestBidder: auctionInstance.highest_bidder,
+        auctionData: auctionInstance,
+    });
 }
 
-// Função para enviar mensagens para todos os clientes conectados
 function broadcastMessage(message) {
     server.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
@@ -65,9 +94,8 @@ function broadcastMessage(message) {
     });
 }
 
-// Função para o Admin conectar-se e gerenciar o leilão
 function handleAdminConnection(socket, req) {
-    let token = req.headers['authorization']; // Token do JWT enviado nos cabeçalhos
+    let token = req.headers['authorization'];
     if (!token) {
         socket.send(JSON.stringify({ type: 'error', message: 'Token necessário.' }));
         socket.close();
@@ -80,10 +108,14 @@ function handleAdminConnection(socket, req) {
 
         socket.on('message', (message) => {
             const parsedMessage = JSON.parse(message);
-            const { auction_id, user_id, bid } = parsedMessage;
+            const { auction_id } = parsedMessage;
 
-            // Processa o lance do admin (admin pode manipular lances)
-            processBid(auction_id, user_id, bid, socket);
+            let auctionInstance = activeAuctions[auction_id];
+            if (auctionInstance) {
+                auctionInstance.auction_ended = true;
+                auctionInstance.auction_winner = auctionInstance.highest_bidder;
+                auctionInstance.finalize();
+            }
         });
 
         socket.on('close', () => {
@@ -95,9 +127,8 @@ function handleAdminConnection(socket, req) {
     }
 }
 
-// Função para o User conectar-se e apenas fazer lances
 function handleUserConnection(socket, req) {
-    let token = req.headers['authorization']; // Token do JWT enviado nos cabeçalhos
+    let token = req.headers['authorization'];
     if (!token) {
         socket.send(JSON.stringify({ type: 'error', message: 'Token necessário.' }));
         socket.close();
@@ -105,14 +136,13 @@ function handleUserConnection(socket, req) {
     }
 
     try {
-        const userData = verifyUserJWT(token);
+        const userData = jwt.verify(token, jwtsecret);
         console.log('Usuário conectado:', userData);
 
         socket.on('message', (message) => {
             const parsedMessage = JSON.parse(message);
             const { auction_id, user_id, bid } = parsedMessage;
 
-            // O usuário só pode fazer lances, então processa apenas lances
             processBid(auction_id, user_id, bid, socket);
         });
 
@@ -125,13 +155,11 @@ function handleUserConnection(socket, req) {
     }
 }
 
-// Função para iniciar o servidor WebSocket
 const server = new WebSocket.Server({ port: 8080 });
 
 server.on('connection', (socket, req) => {
     const url = req.url || '';
 
-    // Verifica se o cliente é admin ou usuário
     if (url.includes('/admin')) {
         handleAdminConnection(socket, req);
     } else if (url.includes('/user')) {
@@ -142,19 +170,9 @@ server.on('connection', (socket, req) => {
     }
 });
 
-// Função para iniciar o servidor WebSocket e expor as funções
-function startServer() {
-    console.log('Servidor WebSocket está rodando na porta 8080');
-}
+console.log('Servidor WebSocket está rodando na porta 8080');
 
-// Função para permitir que os usuários se conectem
-function joinAuction(userId, auctionId) {
-    // Função para simular a junção de um leilão, podendo ser adaptada para a lógica específica de usuários
-    console.log(`${userId} entrou no leilão ${auctionId}`);
-}
-
-// Exportar as funções
-module.exports = {
-    startServer,
-    joinAuction
+export {
+    handleAdminConnection,
+    handleUserConnection,
 };

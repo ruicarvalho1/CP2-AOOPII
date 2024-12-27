@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+/**import { WebSocketServer } from 'ws';
 //import { encryptId, decryptId } from '../middlewares/encryptDecryptData.js';
 import { z } from 'zod';
 
@@ -28,9 +28,6 @@ auctionRooms.set(auctionId, {
 */
 
 const auctionSchema = z.object({
-    banner_image: z.string().default(''),
-    product_name: z.string().default(''),
-    description: z.string().default(''),
     internal_info: z.object({
         auction_visible: z.boolean().default(false),
         auction_ended: z.boolean().default(false),
@@ -69,7 +66,7 @@ const AuctionSendBidSchema = (minBidValue) => {
         bid: z.number().min(minBidValue, { message: `Bid must be at least ${minBidValue}` }),
     });
 };
-    **/
+    ///
 
 
 
@@ -252,3 +249,4 @@ const validateAndSaveAuctionData = (auctionId) => {
 };
 
 export { initializeSocket };
+**/
