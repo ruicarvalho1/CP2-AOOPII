@@ -25,8 +25,7 @@ export const getAuctions = async (req, res) => {
     }
 };
 
-
-export const createAuction = async (req, res) => {
+export const getAuctionById = async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
 
@@ -36,25 +35,65 @@ export const createAuction = async (req, res) => {
 
         const decoded = verifyToken(token);
 
-        const { banner_image, product_name, description, auction_start_value, auction_ended } = req.body;
+        const auctionId = req.params.id;
+
+        const auction = await Auctions.findById(auctionId);
+
+        if (!auction) {
+            return res.status(404).json({ message: 'Leilão não encontrado' });
+        }
+
+        res.json({ auction });
+
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao encontrar o leilão', error: err.message });
+    }
+};
+
+
+export const createAuction = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Erro no Token' });
+        }
+
+        const decoded = verifyToken(token);
+
+        const {
+            banner_image,
+            product_name,
+            description,
+            start_price,
+            is_visible,
+            start_date
+        } = req.body;
 
         const newAuction = new Auctions({
             banner_image,
             product_name,
             description,
-            auction_start_value,
-            auction_ended: auction_ended || false,
+            prices: {
+                auction_start_value: start_price,
+            },
+            internal_info: {
+                auction_visible: is_visible,
+            },
+            dates: {
+                date_auction_started: start_date,
+                date_auction_created: Date.now(),
+            },
             created_by: decoded.id,
         });
 
         await newAuction.save();
 
         res.status(201).json({ message: 'Leilão criado com sucesso', auction: newAuction });
-
     } catch (err) {
         res.status(500).json({ message: 'Erro ao criar o leilão', error: err.message });
     }
 };
+
 
 
 export const updateAuction = async (req, res) => {
@@ -66,28 +105,58 @@ export const updateAuction = async (req, res) => {
         }
 
         const decoded = verifyToken(token);
+        console.log('Token Decodificado:', decoded);
 
         const auction = await Auctions.findById(req.params.id);
-
         if (!auction) {
             return res.status(404).json({ message: 'Leilão não encontrado' });
         }
 
-        const { banner_image, product_name, description, auction_ended } = req.body;
+        const {
+            banner_image,
+            product_name,
+            description,
+            start_date,
+            internal_info,
+            prices
+        } = req.body;
 
-        auction.banner_image = banner_image;
-        auction.product_name = product_name;
-        auction.description = description;
-        auction.auction_ended = auction_ended;
+        console.log('Dados recebidos:', req.body);
+
+
+        const startDateTimestamp = start_date ? new Date(start_date).getTime() : auction.start_date;
+
+        auction.banner_image = banner_image || auction.banner_image;
+        auction.product_name = product_name || auction.product_name;
+        auction.description = description || auction.description;
+        auction.start_date = startDateTimestamp;
+
+        if (internal_info?.auction_visible !== undefined) {
+            auction.internal_info.auction_visible = internal_info.auction_visible;
+        }
+
+        if (prices) {
+            if (prices.auction_start_value !== undefined) {
+                auction.prices.auction_start_value = prices.auction_start_value;
+            }
+            if (prices.auction_end_value !== undefined) {
+                auction.prices.auction_end_value = prices.auction_end_value;
+            }
+        }
+
 
         await auction.save();
+        console.log('Leilão atualizado:', auction);
 
         res.json({ message: 'Leilão atualizado com sucesso', auction });
 
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Erro ao atualizar o leilão', error: err.message });
     }
 };
+
+
 
 
 export const deleteAuction = async (req, res) => {
@@ -98,7 +167,6 @@ export const deleteAuction = async (req, res) => {
             return res.status(401).json({ message: 'Erro no Token' });
         }
 
-        const decoded = verifyToken(token);
 
         const auction = await Auctions.findById(req.params.id);
 
@@ -106,11 +174,7 @@ export const deleteAuction = async (req, res) => {
             return res.status(404).json({ message: 'Leilão não encontrado' });
         }
 
-        if (auction.created_by.toString() !== decoded.id) {
-            return res.status(403).json({ message: 'Não tem permissão para excluir este leilão' });
-        }
-
-        await auction.remove();
+        await Auctions.deleteOne({ _id: req.params.id });
 
         res.json({ message: 'Leilão removido com sucesso' });
 
@@ -118,3 +182,7 @@ export const deleteAuction = async (req, res) => {
         res.status(500).json({ message: 'Erro ao remover o leilão', error: err.message });
     }
 };
+
+
+
+

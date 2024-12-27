@@ -2,7 +2,13 @@ import express from 'express';
 import { authenticate, authorize } from '../middlewares/authMiddleWare.js';
 import { register, login, logout } from '../controllers/authController.js';
 import { getProfile, updateProfile } from "../Controllers/userController.js";
-import {createAuction, deleteAuction, getAuctions, updateAuction} from "../Controllers/auctionsController.js";
+import {
+    createAuction,
+    deleteAuction,
+    getAuctionById,
+    getAuctions,
+    updateAuction
+} from "../Controllers/auctionsController.js";
 
 const router = express.Router();
 
@@ -16,6 +22,7 @@ router.get('/profile', authenticate, authorize(['user', 'admin']), getProfile);
 router.put('/profile', authenticate, authorize(['user', 'admin']), updateProfile);
 router.get('/dashboard', authenticate, authorize(['admin']), getAuctions);
 router.get('/auctions', authenticate, authorize(['user', 'admin']), getAuctions);
+router.get('/auctions/:id', authenticate, authorize(['user', 'admin']),getAuctionById);
 router.post('/auctions', authenticate, authorize(['admin']), createAuction);
 router.put('/auctions/:id', authenticate, authorize(['admin']), updateAuction);
 router.delete('/auctions/:id', authenticate, authorize(['admin']), deleteAuction);

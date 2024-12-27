@@ -1,54 +1,141 @@
 <script setup>
-  const emit = defineEmits();
+import { ref, onMounted, watch } from 'vue';
 
-  const cancelEdit = () => {
-    emit('close');
-  };
+const props = defineProps({
+  isShowingEdit: Boolean,
+  auction: Object
+});
+
+const emit = defineEmits(['close', 'update']);
+
+const cancelEdit = () => {
+  emit('close');
+};
+
+
+const bannerImage = ref('');
+const productName = ref('');
+const description = ref('');
+const startPrice = ref('');
+const startDate = ref('');
+const isVisible = ref(false);
+
+
+const updateFields = () => {
+  if (props.auction) {
+    bannerImage.value = props.auction.banner_image || '';
+    productName.value = props.auction.product_name || '';
+    description.value = props.auction.description || '';
+    startPrice.value = props.auction.prices?.auction_start_value || '';
+
+    if (props.auction.dates?.date_auction_created) {
+      startDate.value = new Date(props.auction.dates.date_auction_created).toISOString().slice(0, 16);
+    }
+
+    isVisible.value = props.auction.internal_info?.auction_visible || false;
+  }
+};
+
+
+watch(() => props.auction, updateFields, { immediate: true });
+
+onMounted(() => {
+  console.log(props.auction);
+  updateFields();
+});
+
+const updateAuction = async () => {
+  try {
+    const token = localStorage.getItem('jwt');
+    if (!token) throw new Error('Token não encontrado');
+
+    const updatedAuction = {
+      ...props.auction,
+      banner_image: bannerImage.value || props.auction?.banner_image,
+      product_name: productName.value || props.auction?.product_name,
+      description: description.value || props.auction?.description,
+      prices: {
+        auction_start_value: parseFloat(startPrice.value) || props.auction?.prices?.auction_start_value,
+      },
+      start_date: startDate.value ? new Date(startDate.value).toISOString() : props.auction?.start_date,
+      internal_info: {
+        auction_visible: isVisible.value,
+      },
+    };
+
+    const response = await fetch(`http://localhost:3000/auth/auctions/${props.auction._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(updatedAuction),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erro ao atualizar o leilão');
+    }
+
+    const data = await response.json();
+    emit('update', data.auction);
+    cancelEdit();
+    location.reload();
+  } catch (err) {
+    console.error('Erro ao tentar atualizar o leilão:', err.message);
+  }
+};
+
+
 </script>
 
+
 <template>
-  <div  v-show="isShowingEdit" class="edit-modal">
+  <div v-show="props.isShowingEdit" class="edit-modal">
     <div class="modal">
       <h2>Editar Leilão</h2>
       <div class="auction-fields">
         <div class="input-section">
           <h3>Imagem:</h3>
-          <input type="text" :placeholder="auction?.banner_image">
+          <input v-model="bannerImage" type="text" :placeholder="props.auction?.banner_image || 'Insira uma imagem'" />
         </div>
         <div class="input-section">
           <h3>Produto:</h3>
-          <input type="text" :placeholder="auction?.product_name">
+          <input v-model="productName" type="text" :placeholder="props.auction?.product_name || 'Nome do produto'" />
         </div>
         <div class="input-section description">
           <h3>Descrição:</h3>
-          <textarea type="text" :placeholder="auction?.description"></textarea>
+          <textarea v-model="description" :placeholder="props.auction?.description || 'Descrição do produto'"></textarea>
         </div>
         <div class="input-section price">
           <h3>Preço inicial:</h3>
           <div class="bid-input">
-            <input type="number" :placeholder="auction?.prices.auction_start_value">
+            <input v-model="startPrice" type="number" :placeholder="props.auction?.prices?.auction_start_value || 'Preço inicial'" />
             <h1>€</h1>
           </div>
         </div>
         <div class="input-section visible">
-          <h3>Visivível ?</h3>
+          <h3>Visível ?</h3>
           <label class="custom-checkbox">
-            <input type="checkbox" />
+            <input v-model="isVisible" type="checkbox" />
             <span class="checkmark"></span>
           </label>
         </div>
         <div class="input-section date">
           <h3>Data de abertura:</h3>
-          <input type="datetime-local"/>
+          <input v-model="startDate" type="datetime-local" />
         </div>
       </div>
       <div class="modal-buttons">
         <button @click="cancelEdit" class="delete">Cancelar</button>
-        <button @click="" >Confirmar</button>
+        <button @click="updateAuction">Confirmar</button>
       </div>
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 

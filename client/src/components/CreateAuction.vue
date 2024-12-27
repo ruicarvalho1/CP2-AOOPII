@@ -1,16 +1,79 @@
 <script setup>
-  import { ref } from 'vue';
+import { ref } from 'vue';
 
-  const emit = defineEmits();
+const auction = ref({
+  banner_image: '',
+  product_name: '',
+  description: '',
+  prices: {
+    auction_start_value: 0
+  },
+  internal_info: {
+    auction_visible: true
+  },
+  dates: {
+    date_auction_started: ''
+  }
+});
 
-  const cancelCreate = () => {
-    emit('close');
-  };
+const emit = defineEmits();
+
+const cancelCreate = () => {
+  emit('close');
+};
 
 
-  const today = new Date().toISOString().split('T')[0];
+
+const createAuction = async () => {
+  console.log("Função createAuction chamada");
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+    console.error('Token não encontrado');
+    return;
+  }
+
+  const startPrice = parseInt(auction.value.prices.auction_start_value, 10);
+  const startDate = new Date(auction.value.dates.date_auction_started).getTime();
+
+  const url = 'http://localhost:3000/auth/auctions';
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        banner_image: auction.value.banner_image,
+        product_name: auction.value.product_name,
+        description: auction.value.description,
+        start_price: startPrice,
+        is_visible: auction.value.internal_info.auction_visible,
+        start_date: startDate
+      }),
+    });
+
+    let data = null;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    }
+
+    if (response.ok) {
+      console.log('Leilão criado com sucesso', data);
+      location.reload();
+      emit('close');
+    } else {
+      console.error('Erro ao criar leilão', data || 'Sem mensagem de erro');
+    }
+  } catch (error) {
+    console.error('Erro ao enviar dados', error);
+  }
+};
+
 
 </script>
+
 
 <template>
   <div  v-show="isShowingCreate" class="create-modal">
@@ -19,38 +82,38 @@
       <div class="auction-fields">
         <div class="input-section">
           <h3>Imagem:</h3>
-          <input type="text" placeholder="Url">
+          <input v-model="auction.banner_image" type="text" placeholder="Imagem do Leilão">
         </div>
         <div class="input-section">
           <h3>Produto:</h3>
-          <input type="text" placeholder="Nome do produto">
+          <input v-model="auction.product_name" type="text" placeholder="Nome do Produto">
         </div>
         <div class="input-section description">
           <h3>Descrição:</h3>
-          <textarea type="text" placeholder="Descrição do produto"></textarea>
+          <textarea v-model="auction.description" placeholder="Descrição do produto"></textarea>
         </div>
         <div class="input-section price">
           <h3>Preço inicial:</h3>
           <div class="bid-input">
-            <input type="number" placeholder="Preço inicial">
+            <input v-model="auction.prices.auction_start_value" type="number" placeholder="Preço Inicial">
             <h1>€</h1>
           </div>
         </div>
         <div class="input-section visible">
           <h3>Visivível ?</h3>
           <label class="custom-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" v-model="auction.internal_info.auction_visible">
             <span class="checkmark"></span>
           </label>
         </div>
         <div class="input-section date">
           <h3>Data de abertura:</h3>
-          <input type="datetime-local" :min="today" placeholder="DD/MM/YYYY HH:MM"/>
+          <input v-model="auction.dates.date_auction_started"  type="datetime-local">
         </div>
       </div>
       <div class="modal-buttons">
-        <button @click="cancelCreate" class="delete">Cancelar</button>
-        <button @click="" >Confirmar</button>
+        <button @click="cancelCreate" class="delete">Fechar</button>
+        <button @click="createAuction" class="save">Criar</button>
       </div>
     </div>
   </div>

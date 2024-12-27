@@ -13,6 +13,7 @@ const loading = ref(true);
 const showEdit = (auction) => {
   selectedAuction.value = auction;
   isShowingEdit.value = !isShowingEdit.value;
+  console.log('isShowingEdit:', isShowingEdit.value);
 };
 
 const showDetails = (auction) => {
@@ -22,14 +23,54 @@ const showDetails = (auction) => {
 const confirmDelete = (auction) => {
   selectedAuction.value = auction;
   isShowing.value = true;
+  console.log('isShowing:', isShowing.value);
 };
+
 
 const cancelDelete = () => {
   isShowing.value = false;
   selectedAuction.value = null;
 };
 
+const deleteAuction = async (auctionId) => {
+  if (!auctionId) {
+    console.error('ID do leilão não fornecido');
+    return;
+  }
 
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+    console.error('Token não encontrado');
+    return;
+  }
+
+  const url = `http://localhost:3000/auth/auctions/${auctionId}`;
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log('Resposta do servidor:', response);
+
+    let data = null;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    }
+
+    if (response.ok) {
+      console.log('Leilão eliminado com sucesso', data);
+      location.reload();
+    } else {
+      console.error('Erro ao eliminar o leilão', data || 'Sem mensagem de erro');
+    }
+  } catch (error) {
+    console.error('Erro ao enviar a requisição', error);
+  }
+};
 
 
 const fetchAuctions = async () => {
@@ -57,6 +98,8 @@ const fetchAuctions = async () => {
     loading.value = false;
   }
 };
+
+
 
 
 onMounted(() => {
@@ -89,21 +132,20 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
-    <div v-if="isShowing" class="confirmation-modal">
+    <div :class="['confirmation-modal', { show: isShowing }]">
       <div class="modal">
         <h2>Tem a certeza que pretende eliminar este leilão?</h2>
         <h4>{{ selectedAuction?.product_name }}</h4>
         <h3>Esta ação não é reversível!</h3>
         <div class="modal-buttons">
-          <button @click="deleteAuction" class="delete">Confirmar</button>
+          <button @click="deleteAuction(selectedAuction?._id)" class="delete">Confirmar</button>
           <button @click="cancelDelete">Cancelar</button>
         </div>
       </div>
     </div>
 
     <SeeAuctionDetails v-if="isShowingDetails" :auction="selectedAuction"/>
-    <EditAuction v-if="isShowingEdit" :auction="selectedAuction"/>
+    <EditAuction :isShowingEdit="isShowingEdit" :auction="selectedAuction" @close="isShowingEdit = false" />
   </div>
 </template>
 
@@ -122,7 +164,7 @@ onMounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1999;
+  z-index: 9999;
 }
 
 .confirmation-modal .modal {
@@ -204,6 +246,10 @@ onMounted(() => {
   background: rgba(255, 0, 0, 0.27);
 }
 
+.edit-modal {
+  z-index: 9999;
+}
+
 .edit-btn, .delete-btn {
   display: flex;
   align-items: center;
@@ -211,7 +257,7 @@ onMounted(() => {
   width: 50%;
   height: 48px;
   background: white;
-  color: red;
+  color: #ff9900;
   border: none;
   font-size: 28px;
   box-shadow: 2px 2px 8px rgba(232, 170, 29, 0.2);
