@@ -154,16 +154,9 @@ onMounted(() => {
       </div>
     </div>
     <button @click="updateProfile" id="save-info-btn" :class="editInfo ? 'hide' : 'show'">Guardar</button>
-    <div class="auction-history-section">
-      <h2>Histórico</h2>
-      <div class="history">
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
-        <AuctionHistoryElement></AuctionHistoryElement>
+    <div class="auction-history-section" v-if="profile?.user.auth.role === 'user'">
+      <h2 >Histórico</h2 >
+      <div class="history" >
         <AuctionHistoryElement></AuctionHistoryElement>
       </div>
     </div>
@@ -361,6 +354,7 @@ onMounted(() => {
     align-items: center;
     width: 80%;
     margin: 32px 0;
+    margin-top: 10px;
   }
 
   .auction-history-section .history {

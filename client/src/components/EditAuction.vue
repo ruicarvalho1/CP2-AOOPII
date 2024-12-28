@@ -29,7 +29,8 @@ const updateFields = () => {
     startPrice.value = props.auction.prices?.auction_start_value || '';
 
     if (props.auction.dates?.date_auction_created) {
-      startDate.value = new Date(props.auction.dates.date_auction_created).toISOString().slice(0, 16);
+      const timestamp = parseInt(props.auction.dates.date_auction_created, 10);
+      startDate.value = new Date(timestamp).toISOString().slice(0, 16);
     }
 
     isVisible.value = props.auction.internal_info?.auction_visible || false;
@@ -87,7 +88,6 @@ const updateAuction = async () => {
   }
 };
 
-
 </script>
 
 
@@ -121,10 +121,6 @@ const updateAuction = async () => {
             <input v-model="isVisible" type="checkbox" />
             <span class="checkmark"></span>
           </label>
-        </div>
-        <div class="input-section date">
-          <h3>Data de abertura:</h3>
-          <input v-model="startDate" type="datetime-local" />
         </div>
       </div>
       <div class="modal-buttons">

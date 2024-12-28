@@ -11,8 +11,8 @@ const props = defineProps({
 </script>
 
 <template>
-  <router-link to="/auction-page" class="auction-card">
 
+  <router-link :to="`/auction-page/${auction?._id}`" class="auction-card">
     <img :src="auction?.banner_image || '/assets/default-banner.jpg'" alt="product" />
     <div class="info">
       <h3>{{ auction?.product_name || 'Produto desconhecido' }}</h3>

@@ -72,10 +72,10 @@ const routes = [
         path: '/auctions',
         name: 'Auctions',
         component: Auctions,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true , requiresRole: 'user'},
     },
     {
-        path: '/auction-page',
+        path: '/auction-page/:id',
         name: 'AuctionPage',
         component: AuctionPage,
         meta: { requiresAuth: true },

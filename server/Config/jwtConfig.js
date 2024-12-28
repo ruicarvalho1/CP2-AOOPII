@@ -19,9 +19,10 @@ export const verifyToken = (token) => {
         console.log("Decoded Token:", decoded);
         return decoded;
     } catch (err) {
-        console.error("Token verification failed:", err);
+        console.error("Token verification failed:", err.message);
         throw new Error('Token inválido ou expirado');
     }
 };
+
 
 export { generateToken };

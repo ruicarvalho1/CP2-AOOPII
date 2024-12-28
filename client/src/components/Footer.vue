@@ -9,7 +9,7 @@
         </a>
       </router-link>
       <div class="infos">
-        <router-link to="/auctions">
+        <router-link to="/auctions" v-if="profile?.user.auth.role === 'user'">
           <h3>Leilões</h3>
         </router-link>
         <router-link to="/about-us">
@@ -19,6 +19,41 @@
     </div>
   </footer>
 </template>
+
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import api from './axios.js';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const profile = ref(null);
+const isError = ref(false);
+const errorMessage = ref('');
+
+
+
+const getProfile = async () => {
+  try {
+    const response = await api.get('auth/profile', { withCredentials: true });
+    profile.value = response.data;
+  } catch (error) {
+    isError.value = true;
+
+
+    errorMessage.value = error.response?.data?.message || 'Erro ao carregar o perfil.';
+
+
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  getProfile();
+});
+</script>
+
 
 <style scoped>
   footer {

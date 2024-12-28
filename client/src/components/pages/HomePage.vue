@@ -5,7 +5,13 @@ import HowItWorks from "@/components/HowItWorks.vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import "animate.css";
+import api from '../axios.js';
 import { useRouter } from 'vue-router';
+
+
+const profile = ref(null);
+const isError = ref(false);
+
 
 
 const auctions = ref([]);
@@ -44,6 +50,24 @@ const fetchAuctions = async () => {
 };
 
 
+const getProfile = async () => {
+  try {
+    const response = await api.get('auth/profile', { withCredentials: true });
+    profile.value = response.data;
+  } catch (error) {
+    isError.value = true;
+
+
+    errorMessage.value = error.response?.data?.message || 'Erro ao carregar o perfil.';
+
+
+    console.error(error);
+  }
+};
+
+
+
+
 const router = useRouter();
 
 const goToAuctions = () => {
@@ -52,18 +76,19 @@ const goToAuctions = () => {
 
 onMounted(() => {
   fetchAuctions();
+  getProfile();
 });
 </script>
 
 <template>
   <Header></Header>
-  <div class="contents">
+  <div class="contents" >
     <video class="presentation animate__animated animate__fadeInDown" autoplay muted>
       <source src="../../assets/apresentacao.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
-    <div class="top-auctions animate__animated animate__fadeInUp">
+    <div class="top-auctions animate__animated animate__fadeInUp" v-if="profile?.user.auth.role === 'user'">
       <h1>Mais populares:</h1>
       <div class="auctions animate__animated animate__fadeInUp" v-if="!isLoading && auctions.length > 3">
         <auction-card v-for="auction in auctions.slice(0,4)" :key="auction._id" :auction="auction"/>

@@ -2,7 +2,7 @@ import { verifyToken } from "../Config/jwtConfig.js";
 import Auctions from "../Models/auctionsModel.js";
 
 
-export const getAuctions = async (req, res) => {
+export const getAuctionsAdmin = async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
 
@@ -13,6 +13,30 @@ export const getAuctions = async (req, res) => {
         const decoded = verifyToken(token);
 
         const auctions = await Auctions.find();
+
+        if (!auctions || auctions.length === 0) {
+            return res.status(404).json({ message: 'Leilões não encontrados' });
+        }
+
+        res.json({ auctions });
+
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao encontrar os leilões', error: err.message });
+    }
+};
+
+export const getAuctionsUser = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Erro no Token' });
+        }
+
+        const decoded = verifyToken(token);
+
+
+        const auctions = await Auctions.find({ 'internal_info.auction_ended': { $ne: true } });
 
         if (!auctions || auctions.length === 0) {
             return res.status(404).json({ message: 'Leilões não encontrados' });
@@ -93,6 +117,54 @@ export const createAuction = async (req, res) => {
         res.status(500).json({ message: 'Erro ao criar o leilão', error: err.message });
     }
 };
+
+
+
+export const getHistoryAuctions = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token não fornecido' });
+        }
+
+        const decoded = verifyToken(token);
+        console.log('Token Decodificado:', decoded);
+
+        if (!decoded) {
+            return res.status(401).json({ message: 'Token inválido ou expirado' });
+        }
+
+        const auctions = [];
+
+        try {
+
+            const completedAuctions = await Auctions.find({
+                'internal_info.auction_winner': decoded.id,
+                'internal_info.auction_visible': true,
+                'internal_info.auction_ended': true
+            });
+
+            auctions.push(...completedAuctions);
+
+            console.log('Leilões encontrados:', auctions);
+
+        } catch (err) {
+            console.error("Erro ao buscar os leilões:", err);
+            return res.status(500).json({ message: 'Erro ao encontrar o histórico dos leilões', error: err.message });
+        }
+
+        if (!auctions || auctions.length === 0) {
+            return res.status(404).json({ message: 'Histórico dos leilões não foi encontrado' });
+        }
+
+        res.json({ auctions });
+    } catch (err) {
+        console.error("Erro ao buscar os leilões:", err);
+        res.status(500).json({ message: 'Erro ao encontrar o histórico dos leilões', error: err.message });
+    }
+};
+
 
 
 

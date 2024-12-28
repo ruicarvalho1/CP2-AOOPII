@@ -6,7 +6,7 @@ import {
     createAuction,
     deleteAuction,
     getAuctionById,
-    getAuctions,
+    getAuctionsAdmin, getAuctionsUser, getHistoryAuctions,
     updateAuction
 } from "../Controllers/auctionsController.js";
 
@@ -20,13 +20,14 @@ router.post('/logout', authenticate, logout);
 
 router.get('/profile', authenticate, authorize(['user', 'admin']), getProfile);
 router.put('/profile', authenticate, authorize(['user', 'admin']), updateProfile);
-router.get('/dashboard', authenticate, authorize(['admin']), getAuctions);
-router.get('/auctions', authenticate, authorize(['user', 'admin']), getAuctions);
+router.get('/dashboard', authenticate, authorize(['admin']), getAuctionsAdmin);
+router.get('/auctions-admin', authenticate, authorize(['admin']), getAuctionsAdmin);
+router.get('/auctions', authenticate, authorize(['user']), getAuctionsUser);
 router.get('/auctions/:id', authenticate, authorize(['user', 'admin']),getAuctionById);
 router.post('/auctions', authenticate, authorize(['admin']), createAuction);
 router.put('/auctions/:id', authenticate, authorize(['admin']), updateAuction);
 router.delete('/auctions/:id', authenticate, authorize(['admin']), deleteAuction);
-
+router.get('/historyauctions', getHistoryAuctions);
 router.put('/auctions', authenticate, authorize(['admin']), updateAuction);
 router.get('/home', authenticate, authorize(['user', 'admin']));
 

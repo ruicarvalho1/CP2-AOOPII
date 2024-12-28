@@ -69,7 +69,14 @@ onMounted(() => {
         <h1>Lux Auctions</h1>
       </router-link>
       <div class="tools" @mouseenter="showPopout" @mouseleave="hidePopout">
+        <div>
+          <router-link  v-if="profile?.user.auth.role === 'admin'" to="/dashboard">
+            <h2>Dashboard</h2>
+          </router-link>
+        </div>
+        <div id="acc" v-if="profile?.user.auth.role === 'user'">
         <router-link to="/auctions"><h2>Leilões</h2></router-link>
+        </div>
         <div id="acc">
           <h2>Conta</h2>
           <div class="acc-popout">

@@ -79,7 +79,7 @@ const fetchAuctions = async () => {
     const token = localStorage.getItem('jwt');
     if (!token) throw new Error('Token não encontrado');
 
-    const response = await fetch('http://localhost:3000/auth/auctions', {
+    const response = await fetch('http://localhost:3000/auth/auctions-admin', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

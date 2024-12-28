@@ -1,20 +1,83 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+
+const auctions = ref([]);
+const isLoading = ref(false);
+const errorMessage = ref(null);
+
+onMounted(async () => {
+  isLoading.value = true;
+  try {
+    const token = localStorage.getItem('jwt');
+
+    if (!token) {
+      errorMessage.value = 'Token não encontrado';
+      isLoading.value = false;
+      return;
+    }
+
+    const response = await fetch('http://localhost:3000/auth/historyauctions', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data.auctions)) {
+        auctions.value = data.auctions;
+      } else {
+        errorMessage.value = 'Erro: Histórico de leilões inválido';
+      }
+    } else {
+      const errorData = await response.json();
+      errorMessage.value = errorData.message || 'Erro desconhecido';
+    }
+  } catch (error) {
+    errorMessage.value = 'Erro de rede: ' + error.message;
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  console.log('Date created from timestamp:', date);
+  return date.toLocaleString('pt-PT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Lisbon',
+  });
+};
+
+
 
 </script>
 
+
 <template>
-  <div class="element">
+  <div v-if="isLoading">Carregando...</div>
+  <div v-if="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div v-for="auction in auctions" :key="auction._id" class="element" v-if="auctions && auctions.length">
     <div class="product-img">
-      <img src="../assets/lambo.jpeg" alt="">
+      <img :src="auction.banner_image" alt="product">
     </div>
     <div class="product">
-      <h4>Lamborghini Aventador SV LP750-4 6.5 V12</h4>
+      <h4>{{ auction.product_name }}</h4>
     </div>
     <div class="price">
-      <h4>Licitação: 350 000€</h4>
+      <h4>Licitação: {{ auction.prices.auction_end_value }}€</h4>
     </div>
     <div class="date">
-      <h4>Data: 23/12/2024</h4>
+      <h4>Data: {{ formatDate(auction.dates.date_auction_ended) }}</h4>
     </div>
     <div class="status">
       <div class="state winner">
@@ -23,6 +86,8 @@
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 .element {
@@ -111,7 +176,6 @@
   .element .product-img,
   .element .product {
     width: 50%;
-
   }
 
   .element .price,
@@ -135,4 +199,8 @@
   }
 }
 
+.error-message {
+  color: red;
+  font-weight: bold;
+}
 </style>
