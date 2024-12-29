@@ -89,13 +89,15 @@ class AuctionInstance {
         this.highest_bidder = '';
         this.date_auction_started = null;
         this.date_auction_ended = null;
+        this.auction_start_value = 0;
+
         console.log(`AuctionInstance criado para leilão: ${auction_id}`);
     }
 
     async updateBid(id, bid_value, server) {
         console.log(`Atualizando lance: user_id=${id}, bid_value=${bid_value}`);
         // Verificar se a oferta é maior que o maior lance atual
-        if (bid_value > this.highest_bid) {
+        if ((bid_value > this.highest_bid) && (bid_value > this.auction_start_value)) {
             this.highest_bid = bid_value;
             this.highest_bidder = id;
             this.bids.push({ user_id: id, bid_value, date: Date.now() });
@@ -185,6 +187,7 @@ async function initializeAuctionInstance(auction_id) {
         auctionInstance.highest_bid = auction.prices.auction_end_value || 0;
         auctionInstance.highest_bidder = auction.internal_info.auction_winner || '';
         auctionInstance.date_auction_started = auction.dates.date_auction_started || Date.now();
+        auctionInstance.auction_start_value = auction.prices.auction_start_value || 0;
     } else {
         console.log(`Nenhum dado encontrado na base de dados para o leilão: auction_id=${auction_id}`);
         auctionInstance.date_auction_started = Date.now();
@@ -210,6 +213,7 @@ async function processBid(server, auction_id, id, bid, socket) {
         console.log(`Leilão já finalizado: auction_id=${auction_id}`);
         return socket.send(JSON.stringify({ type: 'error', message: 'O leilão já terminou' }));
     }
+
 
     await auctionInstance.updateBid(id, bid, server); // Garantir que a atualização seja feita de forma assíncrona
 }
