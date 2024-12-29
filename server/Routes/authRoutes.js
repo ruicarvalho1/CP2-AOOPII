@@ -30,7 +30,6 @@ router.post('/auctions', authenticate, authorize(['admin']), createAuction);
 router.put('/auctions/:id', authenticate, authorize(['admin']), updateAuction);
 router.delete('/auctions/:id', authenticate, authorize(['admin']), deleteAuction);
 router.get('/historyauctions', getHistoryAuctions);
-router.put('/auctions', authenticate, authorize(['admin']), updateAuction);
 router.get('/home', authenticate, authorize(['user', 'admin']));
 
 /*Auction routes*/
