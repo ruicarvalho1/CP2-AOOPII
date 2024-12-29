@@ -18,7 +18,7 @@ const description = ref('');
 const startPrice = ref('');
 const startDate = ref('');
 const isVisible = ref(false);
-const isAuctionStarted = ref(false); // Para verificar se o leilão já foi iniciado
+const isAuctionStarted = ref(false);
 
 // Atualiza os campos do formulário
 const updateFields = () => {
@@ -60,6 +60,7 @@ const updateAuction = async () => {
       start_date: startDate.value ? new Date(startDate.value).toISOString() : props.auction?.start_date,
       internal_info: {
         auction_visible: isVisible.value,
+        auction_started: isAuctionStarted.value, // Atualiza o estado no backend
       },
     };
 
@@ -114,13 +115,45 @@ const startAuction = () => {
     console.log('Conexão WebSocket fechada.');
   };
 };
+
+const endAuction = async () => {
+  try {
+    const token = localStorage.getItem('jwt');
+    if (!token) throw new Error('Token não encontrado');
+
+    const response = await fetch(`http://localhost:3000/auth/auction/${props.auction._id}/end`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        auction_started: false,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erro ao finalizar o leilão');
+    }
+
+    const data = await response.json();
+    isAuctionStarted.value = false;
+    console.log("Leilão terminado!", data.message);
+  } catch (err) {
+    console.error('Erro ao tentar finalizar o leilão:', err.message);
+  }
+};
+
 </script>
+
 
 <template>
   <div v-show="props.isShowingEdit" class="edit-modal">
     <div class="modal">
       <h2>Editar Leilão</h2>
       <div class="auction-fields">
+        <!-- Campos de edição -->
         <div class="input-section">
           <h3>Imagem:</h3>
           <input v-model="bannerImage" type="text" :placeholder="props.auction?.banner_image || 'Insira uma imagem'" />
@@ -148,18 +181,21 @@ const startAuction = () => {
           </label>
         </div>
       </div>
+
       <div class="modal-buttons">
         <button @click="cancelEdit" class="delete">Cancelar</button>
         <button @click="updateAuction">Confirmar</button>
       </div>
 
-      <!-- Botão para Iniciar Leilão, visível apenas para leilões ativos e não iniciados -->
-      <div v-if="isVisible && !isAuctionStarted">
-        <button @click="startAuction" class="start-btn">Iniciar Leilão</button>
+      <!-- Botões para iniciar e terminar o leilão -->
+      <div v-if="isVisible">
+        <button v-if="!isAuctionStarted" @click="startAuction" class="start-btn">Iniciar Leilão</button>
+        <button v-else @click="endAuction" class="end-btn">Terminar Leilão</button>
       </div>
     </div>
   </div>
 </template>
+
 
 
 <style scoped>

@@ -9,7 +9,7 @@ import {
     getAuctionsAdmin, getAuctionsUser, getHistoryAuctions,
     updateAuction
 } from "../Controllers/auctionsController.js";
-import {handleAdminConnection, handleUserConnection,} from "../Controllers/auctionControllerTest.js"
+import {handleAdminConnection, handleUserConnection, auctionEnded} from "../Controllers/auctionControllerTest.js"
 
 
 const router = express.Router();
@@ -36,5 +36,17 @@ router.get('/home', authenticate, authorize(['user', 'admin']));
 
 router.get("/auction/live/user", authenticate,authorize(['user']),handleUserConnection)
 router.get("/auction/live/admin",authenticate, authorize(['admin']), handleAdminConnection)
+router.put('/auction/:id/end', authenticate, authorize(['admin']), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await auctionEnded(id);
+        if (!result) {
+            return res.status(404).json({ message: 'Leilão não encontrado' });
+        }
+        res.status(200).json({ message: 'Leilão finalizado com sucesso' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao finalizar o leilão', error: error.message });
+    }
+});
 
 export default router;

@@ -76,6 +76,28 @@ async function auctionStarted(auction_id) {
     }
 }
 
+export async function auctionEnded(auction_id) {
+    try {
+        const result = await Auction.updateOne(
+            { _id: auction_id },
+            { $set: { 'internal_info.auction_started': false } }
+        );
+
+        if (result.modifiedCount === 0) {
+            console.log(`Leilão não encontrado ou não houve alteração: auction_id=${auction_id}`);
+            return null;
+        }
+
+        console.log(`Leilão terminado: auction_id=${auction_id}, auction_started=false`);
+        return result;
+
+    } catch (error) {
+        console.error(`Erro ao terminar leilão com ID ${auction_id}:`, error);
+        throw new Error('Erro ao atualizar o leilão na base de dados');
+    }
+}
+
+
 class AuctionInstance {
     constructor(auction_id) {
         this.auction_id = auction_id;
