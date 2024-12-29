@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 
@@ -12,14 +13,13 @@ const cancelEdit = () => {
   emit('close');
 };
 
-
 const bannerImage = ref('');
 const productName = ref('');
 const description = ref('');
 const startPrice = ref('');
 const startDate = ref('');
 const isVisible = ref(false);
-
+const isAuctionStarted = ref(false); // Controle para saber se o leilão está iniciado
 
 const updateFields = () => {
   if (props.auction) {
@@ -36,7 +36,6 @@ const updateFields = () => {
     isVisible.value = props.auction.internal_info?.auction_visible || false;
   }
 };
-
 
 watch(() => props.auction, updateFields, { immediate: true });
 
@@ -88,7 +87,42 @@ const updateAuction = async () => {
   }
 };
 
+const startAuction = () => {
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+    console.error('Token não encontrado');
+    return;
+  }
+
+  const ws = new WebSocket(`ws://localhost:8080/auction/live/admin?token=${token}`);
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ auction_id: props.auction._id }));
+    isAuctionStarted.value = true; // Marcar o leilão como iniciado
+    console.log("Leilão iniciado!");
+  };
+
+  ws.onmessage = (event) => {
+    console.log('Mensagem recebida:', event.data);
+  };
+
+  ws.onerror = (error) => {
+    console.error('Erro no WebSocket:', error);
+  };
+
+  ws.onclose = () => {
+    console.log('Conexão WebSocket fechada.');
+  };
+};
+
+const endAuction = () => {
+  isAuctionStarted.value = false; // Marcar o leilão como terminado
+  console.log("Leilão terminado");
+};
 </script>
+
+
+
 
 
 <template>
@@ -126,6 +160,12 @@ const updateAuction = async () => {
       <div class="modal-buttons">
         <button @click="cancelEdit" class="delete">Cancelar</button>
         <button @click="updateAuction">Confirmar</button>
+      </div>
+
+      <!-- Botões de Iniciar e Terminar Leilão -->
+      <div class="auction-actions">
+        <button v-if="!isAuctionStarted" @click="startAuction" class="start-btn">Iniciar Leilão</button>
+        <button v-if="isAuctionStarted" @click="endAuction" class="end-btn">Terminar Leilão</button>
       </div>
     </div>
   </div>

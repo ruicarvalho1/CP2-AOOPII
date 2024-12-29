@@ -23,15 +23,20 @@ const auctionSchema = new mongoose.Schema({
             default: false,
             required: true,
         },
+        auction_started: {
+            type: Boolean,
+            default: false,
+            required: true,
+        },
         auction_ended: {
             type: Boolean,
             default: false,
-            required: false,
+            required: true,
         },
         auction_winner: {
             type: String,
             default: '',
-            required: false,
+            required: true,
         },
         auction_participants: [{
             _id_user: {
@@ -55,12 +60,12 @@ const auctionSchema = new mongoose.Schema({
         date_auction_started: {
             type: Number,
             default: 0,
-            required: false,
+            required: true,
         },
         date_auction_ended: {
             type: Number,
             default: 0,
-            required: false,
+            required: true,
         },
     },
     prices: {
@@ -72,7 +77,7 @@ const auctionSchema = new mongoose.Schema({
         auction_end_value: {
             type: Number,
             default: 0,
-            required: false,
+            required: true,
         },
     },
 });

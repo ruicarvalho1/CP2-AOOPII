@@ -9,6 +9,8 @@ import {
     getAuctionsAdmin, getAuctionsUser, getHistoryAuctions,
     updateAuction
 } from "../Controllers/auctionsController.js";
+import {handleAdminConnection, handleUserConnection,} from "../Controllers/auctionControllerTest.js"
+
 
 const router = express.Router();
 
@@ -30,5 +32,10 @@ router.delete('/auctions/:id', authenticate, authorize(['admin']), deleteAuction
 router.get('/historyauctions', getHistoryAuctions);
 router.put('/auctions', authenticate, authorize(['admin']), updateAuction);
 router.get('/home', authenticate, authorize(['user', 'admin']));
+
+/*Auction routes*/
+
+router.get("/auction/live/user", authenticate,authorize(['user']),handleUserConnection)
+router.get("/auction/live/admin",authenticate, authorize(['admin']), handleAdminConnection)
 
 export default router;
