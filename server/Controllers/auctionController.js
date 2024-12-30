@@ -345,7 +345,7 @@ function handleConnection(socket, server, req) {
     }
 }
 
-const port = 8080; // Porta para produção no Render
+const port = 10000; // Porta para produção no Render
 
 const server = new WebSocketServer({
     port,
