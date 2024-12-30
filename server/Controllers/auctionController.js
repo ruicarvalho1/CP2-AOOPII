@@ -72,7 +72,7 @@ async function auctionStarted(auction_id) {
     }
 }
 
-export async function auctionEnded(auction_id) {
+ async function auctionEnded(auction_id) {
     try {
         const result = await Auction.updateOne(
             {_id: auction_id},
