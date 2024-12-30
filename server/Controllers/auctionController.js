@@ -119,7 +119,7 @@ class AuctionInstance {
         setTimeout(async () => {
             console.log(`Timer de 1 minuto expirado para o leilão: ${this.auction_id}`);
             await this.finalize();
-        }, 60000); // 60000ms = 1 minuto
+        }, 360000);
     }
 
     async updateBid(id, bid_value, server) {
@@ -218,7 +218,6 @@ async function initializeAuctionInstance(auction_id, decoded) {
         auctionInstance.date_auction_started = Date.now();
     }
 
-    // Iniciar o timer de 1 minuto
     auctionInstance.startAuctionTimer();
 
     return auctionInstance;
@@ -349,7 +348,7 @@ function handleConnection(socket, server, req) {
 const server = new WebSocketServer({
     port: 8080,
     verifyClient: (info, callback) => {
-        const allowedOrigins = ['http://localhost:5173', 'undefined', '*', '*:*'];
+        const allowedOrigins = ['https://project-assignment-2-27638-27628-27643.onrender.com', 'undefined', '*', '*:*'];
         const origin = info.origin || '*';
 
         if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
