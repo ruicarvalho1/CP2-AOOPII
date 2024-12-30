@@ -11,7 +11,8 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
+
 
 // Middleware para JSON
 app.use(express.json());
