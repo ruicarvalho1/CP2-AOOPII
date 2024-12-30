@@ -24,7 +24,7 @@ router.get('/profile', authenticate, authorize(['user', 'admin']), getProfile);
 router.put('/profile', authenticate, authorize(['user', 'admin']), updateProfile);
 router.get('/dashboard', authenticate, authorize(['admin']), getAuctionsAdmin);
 router.get('/auctions-admin', authenticate, authorize(['admin']), getAuctionsAdmin);
-router.get('/auctions', authenticate, authorize(['user']), getAuctionsUser);
+router.get('/auctions', authenticate, authorize(['admin'],['user']), getAuctionsUser);
 router.get('/auctions/:id', authenticate, authorize(['user', 'admin']),getAuctionById);
 router.post('/auctions', authenticate, authorize(['admin']), createAuction);
 router.put('/auctions/:id', authenticate, authorize(['admin']), updateAuction);
