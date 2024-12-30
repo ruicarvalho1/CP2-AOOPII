@@ -346,7 +346,7 @@ function handleConnection(socket, server, req) {
 }
 
 const server = new WebSocketServer({
-    port: 8080,
+    port: 3000,
     verifyClient: (info, callback) => {
         const allowedOrigins = ['https://project-assignment-2-27638-27628-27643.onrender.com/', 'undefined', '*', '*:*'];
         const origin = info.origin || '*';
