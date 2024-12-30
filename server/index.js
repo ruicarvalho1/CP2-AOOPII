@@ -32,7 +32,7 @@ app.use('/api', auctionRoutes);
 
 const wss = new WebSocketServer({
     server,
-    path: '/api/auction/live',
+    path: 'wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/api/auction/live',
     verifyClient: (info, callback) => {
         console.log('Verificando origem do cliente:', info.origin);  // Log para verificar a origem
         callback(true);  // Permite todas as origens
