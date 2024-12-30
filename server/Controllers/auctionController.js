@@ -345,7 +345,7 @@ function handleConnection(socket, server, req) {
     }
 }
 
-const port = process.env.PORT || 9000; // Porta atribuída dinamicamente ou fallback para 9000
+const port =  80; // Porta atribuída dinamicamente ou fallback para 9000
 
 const server = new WebSocketServer({
     port,
