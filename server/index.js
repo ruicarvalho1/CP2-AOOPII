@@ -5,7 +5,7 @@ import http from 'http';
 import { WebSocketServer } from 'ws';
 import authRoutes from "./Routes/authRoutes.js";
 import auctionRoutes from './Routes/auctionRoutes.js'; // Rotas REST
-import { handleAdminConnection, handleUserConnection } from './websockets/websocketHandlers.js'; // WebSocket Handlers
+import { handleAdminConnection, handleUserConnection } from './Controllers/auctionController.js'; // WebSocket Handlers
 
 dotenv.config();
 
