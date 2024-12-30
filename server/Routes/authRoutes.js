@@ -32,21 +32,6 @@ router.delete('/auctions/:id', authenticate, authorize(['admin']), deleteAuction
 router.get('/historyauctions', getHistoryAuctions);
 router.get('/home', authenticate, authorize(['user', 'admin']));
 
-/*Auction routes*/
 
-router.get("/auction/live/user", authenticate,authorize(['user']),handleUserConnection)
-router.get("/auction/live/admin",authenticate, authorize(['admin']), handleAdminConnection)
-router.put('/auction/:id/end', authenticate, authorize(['admin']), async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await auctionEnded(id);
-        if (!result) {
-            return res.status(404).json({ message: 'Leilão não encontrado' });
-        }
-        res.status(200).json({ message: 'Leilão encerrado com sucesso' });
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao finalizar o leilão', error: error.message });
-    }
-});
 
 export default router;

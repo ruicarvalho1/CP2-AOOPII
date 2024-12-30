@@ -2,8 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import http from 'http';
-
-import authRoutes from './Routes/authRoutes.js';
+import { WebSocketServer } from 'ws';
+import authRoutes from "./Routes/authRoutes.js";
+import auctionRoutes from './Routes/auctionRoutes.js'; // Rotas REST
+import { handleAdminConnection, handleUserConnection } from './websockets/websocketHandlers.js'; // WebSocket Handlers
 
 dotenv.config();
 
@@ -11,22 +13,7 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-// Middleware CORS personalizado
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://project-assignment-2-27638-27628-27643.onrender.com');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Métodos permitidos
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Cabeçalhos permitidos
-    res.header('Access-Control-Allow-Credentials', 'true'); // Permite o envio de cookies de autenticação
-
-    // Para requisições preflight (OPTIONS)
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    next(); // Passa para o próximo middleware ou rota
-});
-
-// Middleware para análise de JSON
+// Middleware para JSON
 app.use(express.json());
 
 // Conexão com MongoDB
@@ -34,12 +21,30 @@ mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+    .then(() => console.log('MongoDB conectado'))
+    .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Rotas
-app.use('/auth', authRoutes);
+app.use('/auth',authRoutes )
 
+app.use('/api', auctionRoutes);
+
+// Configuração do WebSocket
+const wss = new WebSocketServer({ server, path: '/auction/live' });
+
+wss.on('connection', (socket, req) => {
+    const url = req.url || '';
+    if (url.includes('admin')) {
+        handleAdminConnection(socket, wss, req);
+    } else if (url.includes('user')) {
+        handleUserConnection(socket, wss, req);
+    } else {
+        console.log('Conexão WebSocket sem tipo especificado');
+        socket.close(); // Fecha a conexão se não é reconhecida
+    }
+});
+
+// Inicia o servidor HTTP
 server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Servidor a correr em: http://localhost:${port}`);
+    console.log(`WebSockets disponíveis em: ws://localhost:${port}/auction/live`);
 });

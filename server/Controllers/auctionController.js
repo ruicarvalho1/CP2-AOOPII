@@ -368,4 +368,5 @@ server.on('connection', (socket, req) => {
 export {
     handleAdminConnection,
     handleUserConnection,
+    auctionEnded
 };
