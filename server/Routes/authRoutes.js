@@ -43,7 +43,7 @@ router.put('/auction/:id/end', authenticate, authorize(['admin']), async (req, r
         if (!result) {
             return res.status(404).json({ message: 'Leilão não encontrado' });
         }
-        res.status(200).json({ message: 'Leilão finalizado com sucesso' });
+        res.status(200).json({ message: 'Leilão encerrado com sucesso' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao finalizar o leilão', error: error.message });
     }
