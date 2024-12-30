@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://project-assignment-2-27638-27628-27643-3dd5.onrender.com',
     withCredentials: true,
 });
 
