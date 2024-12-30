@@ -4,6 +4,9 @@
   "description": "your description",
   "main": "server.js",
   "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "@types/passport": "^1.0.17",
     "bcrypt": "^5.1.1",

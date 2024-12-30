@@ -97,8 +97,8 @@ export async function auctionEnded(auction_id) {
 class AuctionInstance {
     constructor(auction_id) {
         this.auction_id = auction_id;
-        this.date_auction_started = true,
-            this.auction_visible = false;
+        this.date_auction_started = true;
+        this.auction_visible = false;
         this.auction_ended = false;
         this.auction_winner = '';
         this.auction_participants = [];
@@ -111,6 +111,15 @@ class AuctionInstance {
         this.auction_active_users = [];
 
         console.log(`AuctionInstance criado para leilão: ${auction_id}`);
+    }
+
+    async startAuctionTimer() {
+        // Timer de 1 minuto para finalizar o leilão
+        console.log(`Iniciando timer de 1 minuto para leilão: ${this.auction_id}`);
+        setTimeout(async () => {
+            console.log(`Timer de 1 minuto expirado para o leilão: ${this.auction_id}`);
+            await this.finalize();
+        }, 60000); // 60000ms = 1 minuto
     }
 
     async updateBid(id, bid_value, server) {
@@ -142,7 +151,7 @@ class AuctionInstance {
             }
 
         } else {
-            console.log(`oferta inválido. O valor deve ser maior que o maior oferta atual: current_highest_bid=${this.highest_bid}`);
+            console.log(`Oferta inválida. O valor deve ser maior que o maior oferta atual: current_highest_bid=${this.highest_bid}`);
 
             server.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
@@ -179,6 +188,7 @@ class AuctionInstance {
 }
 
 
+
 async function initializeAuctionInstance(auction_id, decoded) {
     console.log(`A iniciar instância do leilão: auction_id=${auction_id}`);
     if (activeAuctions[auction_id]) {
@@ -207,6 +217,9 @@ async function initializeAuctionInstance(auction_id, decoded) {
         console.log(`Nenhum dado encontrado na base de dados para o leilão: auction_id=${auction_id}`);
         auctionInstance.date_auction_started = Date.now();
     }
+
+    // Iniciar o timer de 1 minuto
+    auctionInstance.startAuctionTimer();
 
     return auctionInstance;
 }
