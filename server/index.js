@@ -35,20 +35,25 @@ const wss = new WebSocketServer({
     path: '/api/auction/live',
     verifyClient: (info, callback) => {
         const origin = info.origin || '';
+        console.log('Verificando origem do cliente:', origin);  // Log para verificar a origem
         if (origin === 'https://project-assignment-2-27638-27628-27643-3dd5.onrender.com') {
+            console.log('Origem permitida. Continuando conexão.');
             callback(true);
         } else {
+            console.log('Origem não permitida. Bloqueando conexão.');
             callback(false, 400, 'Origem não permitida');
         }
     }
 });
 
-
 wss.on('connection', (socket, req) => {
+    console.log('Nova conexão WebSocket recebida:', req.url);  // Log para verificar a URL da conexão
     const url = req.url || '';
     if (url.includes('admin')) {
+        console.log('Conexão admin identificada.');
         handleAdminConnection(socket, wss, req);
     } else if (url.includes('user')) {
+        console.log('Conexão user identificada.');
         handleUserConnection(socket, wss, req);
     } else {
         console.log('Conexão WebSocket sem tipo especificado');
