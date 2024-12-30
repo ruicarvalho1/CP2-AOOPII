@@ -345,24 +345,32 @@ function handleConnection(socket, server, req) {
     }
 }
 
-const server = new WebSocketServer({
-    port: 9000,
-    verifyClient: (info, callback) => {
-        const allowedOrigins = ['https://project-assignment-2-27638-27628-27643.onrender.com/', 'undefined', '*', '*:*'];
-        const origin = info.origin || '*';
+const port = process.env.PORT || 9000; // Porta atribuída dinamicamente ou fallback para 9000
 
-        if ((allowedOrigins.includes(origin)) || (allowedOrigins.includes('*')) || (allowedOrigins.includes('undidined'))) {
+const server = new WebSocketServer({
+    port,
+    verifyClient: (info, callback) => {
+        const allowedOrigins = [
+            'https://project-assignment-2-27638-27628-27643.onrender.com',
+            'http://localhost:5173',
+            '*', // Permitir todas as origens, se necessário
+        ];
+        const origin = info.origin || '';
+
+        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+            console.log(`Conexão permitida para origem: ${origin}`);
             callback(true);
         } else {
             console.log(`Acesso negado para origem: ${origin}`);
             callback(false, 403, 'Acesso negado');
         }
-    }
+    },
 });
+
+console.log(`Websocket a correr na porta: ${port}`);
 
 server.on('connection', (socket, req) => handleConnection(socket, server, req));
 
-console.log('Servidor WebSocket está a correr na porta 8080');
 
 export {
     handleAdminConnection,
