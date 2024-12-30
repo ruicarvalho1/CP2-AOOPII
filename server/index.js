@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 // Middleware para JSON
 app.use(express.json());
@@ -45,6 +45,7 @@ wss.on('connection', (socket, req) => {
 
 // Inicia o servidor HTTP
 server.listen(port, () => {
-    console.log(`Servidor a correr em: http://localhost:${port}`);
-    console.log(`WebSockets disponíveis em: ws://localhost:${port}/auction/live`);
+    console.log(`Servidor a correr em: https://project-assignment-2-27638-27628-27643-3dd5.onrender.com`);
+    console.log(`WebSockets disponíveis em: wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/api/auction/live`);
 });
+
