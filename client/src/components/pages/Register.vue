@@ -159,7 +159,7 @@ const handleSubmit = async () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', userData);
+      const response = await axios.post('https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/register', userData);
       console.log('Registro bem-sucedido:', response.data);
     } catch (error) {
       console.error('Erro no registro:', error.response ? error.response.data : error.message);

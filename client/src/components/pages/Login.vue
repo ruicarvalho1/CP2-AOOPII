@@ -74,7 +74,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:3000/auth/login', {
+        const response = await axios.post('https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/login', {
           username: username.value,
           password: password.value,
         });

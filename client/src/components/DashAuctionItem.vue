@@ -44,7 +44,7 @@ const deleteAuction = async (auctionId) => {
     return;
   }
 
-  const url = `http://localhost:3000/auth/auctions/${auctionId}`;
+  const url = `https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions/${auctionId}`;
   try {
     const response = await fetch(url, {
       method: 'DELETE',
@@ -79,7 +79,7 @@ const fetchAuctions = async () => {
     const token = localStorage.getItem('jwt');
     if (!token) throw new Error('Token não encontrado');
 
-    const response = await fetch('http://localhost:3000/auth/auctions-admin', {
+    const response = await fetch('https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions-admin', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

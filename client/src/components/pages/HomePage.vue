@@ -26,7 +26,7 @@ const fetchAuctions = async () => {
       throw new Error('Token não encontrado');
     }
 
-    const response = await fetch('http://localhost:3000/auth/auctions', {
+    const response = await fetch('https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

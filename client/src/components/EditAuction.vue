@@ -64,7 +64,7 @@ const updateAuction = async () => {
       },
     };
 
-    const response = await fetch(`http://localhost:3000/auth/auctions/${props.auction._id}`, {
+    const response = await fetch(`https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions/${props.auction._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const startAuction = () => {
     return;
   }
 
-  const ws = new WebSocket(`ws://localhost:8080/auction/live/admin?token=${token}`);
+  const ws = new WebSocket(`wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auction/live/admin?token=${token}`);
 
   ws.onopen = () => {
     ws.send(JSON.stringify({ auction_id: props.auction._id }));

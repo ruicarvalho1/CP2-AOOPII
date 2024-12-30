@@ -22,7 +22,7 @@ const fetchAuctionDetails = async (id) => {
       throw new Error('Token não encontrado');
     }
 
-    const response = await fetch(`http://localhost:3000/auth/auctions/${id}`, {
+    const response = await fetch(`https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const startWebSocket = () => {
     return;
   }
 
-  ws.value = new WebSocket(`ws://localhost:8080/auction/live/user?token=${token}`);
+  ws.value = new WebSocket(`wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auction/live/user?token=${token}`);
 
   ws.value.onopen = () => {
     console.log('Conexão WebSocket iniciada.');

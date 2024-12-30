@@ -35,7 +35,7 @@ const createAuction = async () => {
   const startPrice = parseInt(auction.value.prices.auction_start_value, 10);
   const startDate = new Date(auction.value.dates.date_auction_started).getTime();
 
-  const url = 'http://localhost:3000/auth/auctions';
+  const url = 'https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/auctions';
   try {
     const response = await fetch(url, {
       method: 'POST',

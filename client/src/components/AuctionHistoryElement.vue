@@ -16,7 +16,7 @@ onMounted(async () => {
       return;
     }
 
-    const response = await fetch('http://localhost:3000/auth/historyauctions', {
+    const response = await fetch('https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/historyauctions', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
