@@ -121,7 +121,7 @@ const endAuction = async () => {
     const token = localStorage.getItem('jwt');
     if (!token) throw new Error('Token não encontrado');
 
-    const response = await fetch(`http://localhost:3000/auth/auction/${props.auction._id}/end`, {
+    const response = await fetch(`https://project-assignment-2-27638-27628-27643.onrender.com/auth/auction/${props.auction._id}/end`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
