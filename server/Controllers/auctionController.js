@@ -345,31 +345,24 @@ function handleConnection(socket, server, req) {
     }
 }
 
-const port =  80; // Porta atribuída dinamicamente ou fallback para 9000
+const port = 8080; // Porta para produção no Render
 
 const server = new WebSocketServer({
     port,
     verifyClient: (info, callback) => {
-        const allowedOrigins = [
-            'https://project-assignment-2-27638-27628-27643.onrender.com',
-            'http://localhost:5173',
-            '*', // Permitir todas as origens, se necessário
-        ];
-        const origin = info.origin || '';
-
-        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-            console.log(`Conexão permitida para origem: ${origin}`);
-            callback(true);
-        } else {
-            console.log(`Acesso negado para origem: ${origin}`);
-            callback(false, 403, 'Acesso negado');
-        }
+        // Permitir todas as origens
+        console.log(`Conexão recebida de origem: ${info.origin}`);
+        callback(true); // Sempre permite a conexão
     },
 });
 
 console.log(`Websocket a correr na porta: ${port}`);
 
-server.on('connection', (socket, req) => handleConnection(socket, server, req));
+
+server.on('connection', (socket, req) => {
+    console.log(`Nova conexão recebida de: ${req.headers['origin'] || 'Desconhecida'}`);
+    handleConnection(socket, server, req);
+});
 
 
 export {
