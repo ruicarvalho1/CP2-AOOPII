@@ -34,17 +34,11 @@ const wss = new WebSocketServer({
     server,
     path: '/api/auction/live',
     verifyClient: (info, callback) => {
-        const origin = info.origin || '';
-        console.log('Verificando origem do cliente:', origin);  // Log para verificar a origem
-        if (origin === 'https://project-assignment-2-27638-27628-27643-3dd5.onrender.com') {
-            console.log('Origem permitida. Continuando conexão.');
-            callback(true);
-        } else {
-            console.log('Origem não permitida. Bloqueando conexão.');
-            callback(false, 400, 'Origem não permitida');
-        }
+        console.log('Verificando origem do cliente:', info.origin);  // Log para verificar a origem
+        callback(true);  // Permite todas as origens
     }
 });
+
 
 wss.on('connection', (socket, req) => {
     console.log('Nova conexão WebSocket recebida:', req.url);  // Log para verificar a URL da conexão
