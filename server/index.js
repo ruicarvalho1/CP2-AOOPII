@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import http from 'http';
 import { WebSocketServer } from 'ws';
-import authRoutes from "./Routes/authRoutes.js";
+import authRoutes from './Routes/authRoutes.js';
 import auctionRoutes from './Routes/auctionRoutes.js'; // Rotas REST
 import { handleAdminConnection, handleUserConnection } from './Controllers/auctionController.js'; // WebSocket Handlers
 
@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 10000;
-
 
 // Middleware para JSON
 app.use(express.json());
@@ -25,12 +24,12 @@ mongoose.connect(process.env.MONGO_URI, {
     .then(() => console.log('MongoDB conectado'))
     .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-app.use('/auth',authRoutes )
-
+// Rotas
+app.use('/auth', authRoutes);
 app.use('/api', auctionRoutes);
 
 // Configuração do WebSocket
-const wss = new WebSocketServer({ server, path: '/auction/live' });
+const wss = new WebSocketServer({ server, path: '/api/auction/live' }); // Mudado para /api/auction/live para corresponder à URL
 
 wss.on('connection', (socket, req) => {
     const url = req.url || '';
@@ -49,4 +48,3 @@ server.listen(port, () => {
     console.log(`Servidor a correr em: https://project-assignment-2-27638-27628-27643-3dd5.onrender.com`);
     console.log(`WebSockets disponíveis em: wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/api/auction/live`);
 });
-
