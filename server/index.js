@@ -13,7 +13,8 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: 'https://project-assignment-2-27638-27628-27643.onrender.com',
+    //origin: 'https://project-assignment-2-27638-27628-27643.onrender.com',
+    origin: '*',
     credentials: true,
 }));
 
