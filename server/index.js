@@ -38,7 +38,7 @@ mongoose.connect(process.env.MONGO_URI, {
     .catch((err) => console.error('MongoDB connection error:', err));
 
 // Rotas
-app.use('', authRoutes);
+app.use('/auth', authRoutes);
 
 server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
