@@ -9,7 +9,7 @@ import {
     getAuctionsAdmin, getAuctionsUser, getHistoryAuctions,
     updateAuction
 } from "../Controllers/auctionsController.js";
-import {handleAdminConnection, handleUserConnection, auctionEnded} from "../Controllers/auctionControllerTest.js"
+import {handleAdminConnection, handleUserConnection, auctionEnded} from "../Controllers/auctionController.js"
 
 
 const router = express.Router();
