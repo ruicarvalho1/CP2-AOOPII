@@ -29,7 +29,20 @@ app.use('/auth', authRoutes);
 app.use('/api', auctionRoutes);
 
 // Configuração do WebSocket
-const wss = new WebSocketServer({ server, path: '/api/auction/live' }); // Mudado para /api/auction/live para corresponder à URL
+
+const wss = new WebSocketServer({
+    server,
+    path: '/api/auction/live',
+    verifyClient: (info, callback) => {
+        const origin = info.origin || '';
+        if (origin === 'https://project-assignment-2-27638-27628-27643-3dd5.onrender.com') {
+            callback(true);
+        } else {
+            callback(false, 400, 'Origem não permitida');
+        }
+    }
+});
+
 
 wss.on('connection', (socket, req) => {
     const url = req.url || '';
