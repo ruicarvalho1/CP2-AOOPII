@@ -2,13 +2,17 @@
 import Header from "@/components/Header.vue";
 import HowItWorks from "@/components/HowItWorks.vue";
 import Footer from "@/components/Footer.vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const auction = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
 const route = useRoute();
+
+const highestBid = ref(null);
+const highestBidder = ref(null);
+const ws = ref(null);
 
 const fetchAuctionDetails = async (id) => {
   isLoading.value = true;
@@ -33,6 +37,11 @@ const fetchAuctionDetails = async (id) => {
 
     const data = await response.json();
     auction.value = data;
+
+    // Ativar WebSocket se o leilão já tiver começado
+    if (auction.value.auction.internal_info?.auction_started) {
+      startWebSocket();
+    }
   } catch (error) {
     errorMessage.value = error.message || 'Erro desconhecido';
   } finally {
@@ -40,6 +49,51 @@ const fetchAuctionDetails = async (id) => {
   }
 };
 
+const startWebSocket = () => {
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+    console.error('Token não encontrado');
+    return;
+  }
+
+  ws.value = new WebSocket(`ws://localhost:8080/auction/live/user?token=${token}`);
+
+  ws.value.onopen = () => {
+    console.log('Conexão WebSocket iniciada.');
+  };
+
+  ws.value.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.highestBid !== undefined) {
+      highestBid.value = data.highestBid;
+    }
+    if (data.highestBidder !== undefined) {
+      highestBidder.value = data.highestBidder;
+    }
+  };
+
+  ws.value.onerror = (error) => {
+    console.error('Erro no WebSocket:', error);
+  };
+
+  ws.value.onclose = () => {
+    console.log('Conexão WebSocket fechada.');
+  };
+};
+
+const sendBid = async (amount) => {
+  if (!ws.value || ws.value.readyState !== WebSocket.OPEN) {
+    console.error('WebSocket não está aberto.');
+    return;
+  }
+
+  const bidPayload = {
+    auction_id: auction.value?.auction?._id,
+    bid: amount,
+  };
+
+  ws.value.send(JSON.stringify(bidPayload));
+};
 onMounted(() => {
   const auctionId = route.params.id;
   console.log("Auction ID:", auctionId);
@@ -47,8 +101,8 @@ onMounted(() => {
     fetchAuctionDetails(auctionId);
   }
 });
-
 </script>
+
 
 <template>
   <Header></Header>
@@ -57,34 +111,35 @@ onMounted(() => {
     <div class="fake-header">
       <div class="line-effect"></div>
     </div>
-    <h1 class="product-name">{{auction?.auction.product_name}}</h1>
+    <h1 class="product-name">{{ auction?.auction.product_name }}</h1>
     <div class="auction-infos">
       <div class="product">
         <div class="product-img">
           <img :src="auction?.auction?.banner_image" alt="product">
-
         </div>
         <div class="description-div">
           <h2>Descrição do produto:</h2>
-          <h5>
-            {{auction?.auction.description}}
-          </h5>
+          <h5>{{ auction?.auction.description }}</h5>
         </div>
       </div>
       <div class="auction-bidding">
         <div class="bidding-container">
           <h2>Licitação atual</h2>
-          <h1>{{auction?.auction.prices.auction_start_value}} €</h1>
+          <h1>{{ highestBid ?? auction?.auction.prices.auction_start_value }} €</h1>
+          <div class="highest-bidder" v-if="highestBidder">
+            <h3>Licitação mais alta por:</h3>
+            <h5>{{ highestBidder }}</h5>
+          </div>
           <div class="bid-div">
             <h3>Introduza a sua licitação:</h3>
             <div class="bid-input">
-              <input placeholder="Montante...">
+              <input v-model.number="bidAmount" placeholder="Montante..." />
               <h1>€</h1>
             </div>
             <div class="raise-error error">
               <h4>Licitação necessita de ser superior ao valor atual</h4>
             </div>
-            <button class="confirm">Confirmar</button>
+            <button class="confirm" @click="sendBid(bidAmount)">Confirmar</button>
           </div>
         </div>
       </div>
@@ -95,6 +150,7 @@ onMounted(() => {
 
   <Footer></Footer>
 </template>
+
 
 <style scoped>
   .auction-contents {

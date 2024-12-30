@@ -20,9 +20,15 @@ const props = defineProps({
       <h4><span class="mobile-text">Vendido por:</span> {{ auction?.seller || 'Desconhecido' }}</h4>
       <h4>Vencedor: {{ auction.internal_info?.auction_winner || 'Não determinado' }}</h4>
     </div>
-    <div class="state" :class="{ ended: auction.internal_info?.auction_ended }">
+    <div style="display: block; position: relative; margin-bottom: 10px;"
+         class="state" :class="{ ended: auction.internal_info?.auction_ended }">
       <h4>{{ auction.internal_info?.auction_ended ? 'Leilão Finalizado' : 'Leilão Ativo' }}</h4>
     </div>
+    <div style="display: block; position: relative; margin-bottom: 10px;"
+         class="stateLive" :class="{ ended: auction.internal_info?.auction_started }">
+      <h4>{{ auction.internal_info?.auction_started ? 'Leilão ao Vivo' : 'Leilão Fechado' }}</h4>
+    </div>
+
   </router-link>
 </template>
 <style scoped>
@@ -59,6 +65,18 @@ const props = defineProps({
 .auction-card .info h4, h3 {
   text-overflow: ellipsis;
 }
+
+.auction-card .stateContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.state, .stateLive {
+  display: block;
+  margin-bottom: 10px;
+}
+
 .auction-card .state {
   display: flex;
   justify-content: center;
@@ -68,6 +86,21 @@ const props = defineProps({
   background: rgba(0, 255, 0, 0.27);
   position: absolute;
   bottom: 10px;
+}
+
+.auction-card .stateLive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  width: calc(100% - 20px);
+  background: rgba(157, 0, 255, 0.27);
+  position: absolute;
+  bottom: 10px;
+}
+
+.auction-card .stateLive.started{
+  background: rgba(255, 0, 0, 0.27);
 }
 
 .auction-card .state.ended {
