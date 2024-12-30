@@ -75,6 +75,12 @@ const routes = [
         meta: { requiresAuth: true , requiresRole: 'user'},
     },
     {
+        path: '/auctions-admin',
+        name: 'Auctions',
+        component: Auctions,
+        meta: { requiresAuth: true , requiresRole: 'user'},
+    },
+    {
         path: '/auction-page/:id',
         name: 'AuctionPage',
         component: AuctionPage,
