@@ -351,7 +351,7 @@ const server = new WebSocketServer({
         const allowedOrigins = ['https://project-assignment-2-27638-27628-27643.onrender.com/', 'undefined', '*', '*:*'];
         const origin = info.origin || '*';
 
-        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        if ((allowedOrigins.includes(origin)) || (allowedOrigins.includes('*')) || (allowedOrigins.includes('undidined'))) {
             callback(true);
         } else {
             console.log(`Acesso negado para origem: ${origin}`);
