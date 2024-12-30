@@ -37,7 +37,7 @@ const toggleEdit = () => {
 
 const getProfile = async () => {
   try {
-    const response = await api.get("auth/profile", { withCredentials: true });
+    const response = await api.get("https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/profile", { withCredentials: true });
     profile.value = response.data;
 
 
@@ -64,7 +64,7 @@ const updateProfile = async () => {
   };
 
   try {
-    const response = await api.put("auth/profile", userData, {
+    const response = await api.put("https://project-assignment-2-27638-27628-27643-3dd5.onrender.com/auth/profile", userData, {
       withCredentials: true,
     });
 
