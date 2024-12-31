@@ -4,8 +4,7 @@ import mongoose from 'mongoose';
 import http from 'http';
 import { WebSocketServer } from 'ws';
 import authRoutes from './Routes/authRoutes.js';
-import auctionRoutes from './Routes/auctionRoutes.js'; // Rotas REST
-import { handleAdminConnection, handleUserConnection } from './Controllers/auctionController.js'; // WebSocket Handlers
+import { handleAdminConnection, handleUserConnection } from './Controllers/auctionController.js';
 
 dotenv.config();
 
@@ -24,24 +23,21 @@ mongoose.connect(process.env.MONGO_URI, {
     .then(() => console.log('MongoDB conectado'))
     .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Rotas
+// Rotas REST
 app.use('/auth', authRoutes);
-app.use('/api', auctionRoutes);
 
 // Configuração do WebSocket
-
 const wss = new WebSocketServer({
     server,
-    path: 'wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/api/auction/live',
+    path: '/ws/auction/live', // Caminho relativo para WebSocket
     verifyClient: (info, callback) => {
-        console.log('Verificando origem do cliente:', info.origin);  // Log para verificar a origem
-        callback(true);  // Permite todas as origens
+        console.log('Verificando origem do cliente:', info.origin); // Depuração
+        callback(true); // Permite todas as origens
     }
 });
 
-
 wss.on('connection', (socket, req) => {
-    console.log('Nova conexão WebSocket recebida:', req.url);  // Log para verificar a URL da conexão
+    console.log('Nova conexão WebSocket recebida:', req.url); // Depuração da URL de conexão
     const url = req.url || '';
     if (url.includes('admin')) {
         console.log('Conexão admin identificada.');
@@ -57,6 +53,6 @@ wss.on('connection', (socket, req) => {
 
 // Inicia o servidor HTTP
 server.listen(port, () => {
-    console.log(`Servidor a correr em: https://project-assignment-2-27638-27628-27643-3dd5.onrender.com`);
-    console.log(`WebSockets disponíveis em: wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/api/auction/live`);
+    console.log(`Servidor HTTP disponível em: https://project-assignment-2-27638-27628-27643-3dd5.onrender.com`);
+    console.log(`WebSockets disponíveis em: wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/ws/auction/live`);
 });
