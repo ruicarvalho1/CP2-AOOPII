@@ -32,21 +32,44 @@ console.log("A entrar no const wss");
 
 
 
+console.log("Configurando WebSocket...");
+
 const wss = new WebSocketServer({
     server,
     path: '/ws/auction/live',
     verifyClient: (info, callback) => {
-        console.log(`Conexão recebida de origem: ${info.origin}`);
-        callback(true); // Permite todas as origens
+        console.log(`Tentativa de conexão WebSocket detectada.`);
+        console.log(`Origem: ${info.origin}`);
+        console.log(`Caminho: ${info.req?.url || 'Desconhecido'}`);
+        callback(true); // Permitir todas as conexões
+        console.log("Conexão permitida pelo verifyClient.");
     },
 });
 
-console.log("wss instancia")
+console.log("WebSocketServer configurado com sucesso.");
 
 wss.on('connection', (socket, req) => {
-    console.log(`Nova conexão recebida de: ${req.headers['origin'] || 'Desconhecida'}`);
-    handleConnection(socket, wss, req); // Usar o handler centralizado
+    console.log("Evento de conexão WebSocket disparado.");
+    console.log(`Nova conexão recebida.`);
+    console.log(`Origem: ${req.headers.origin || 'Desconhecida'}`);
+    console.log(`Endereço remoto: ${req.socket.remoteAddress || 'Desconhecido'}`);
+
+    // Log para acompanhamento da chamada do handler
+    console.log("Chamando handleConnection...");
+    handleConnection(socket, wss, req);
+    console.log("handleConnection executado com sucesso.");
 });
+
+wss.on('error', (err) => {
+    console.error("Erro no WebSocketServer:", err);
+});
+
+wss.on('close', () => {
+    console.log("WebSocketServer encerrado.");
+});
+
+console.log("Eventos do WebSocketServer configurados.");
+
 
 
 // Inicia o servidor HTTP
