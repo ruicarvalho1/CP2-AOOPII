@@ -13,9 +13,12 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 8080;
 
-// Middleware para CORS
-app.use(cors()); // Configuração padrão para permitir todas as origens
-console.log("CORS configurado.");
+app.use(cors({
+    origin: 'https://project-assignment-2-27638-27628-27643.onrender.com',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Middleware para JSON
 app.use(express.json());
