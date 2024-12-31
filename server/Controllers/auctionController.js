@@ -349,10 +349,11 @@ function handleConnection(socket, server, req) {
 const server = new WebSocketServer({
     port: 8080,
     verifyClient: (info, callback) => {
-        const allowedOrigins = ['http://localhost:5173', 'undefined', '*', '*:*'];
+        const allowedOrigins = ['https://project-assignment-2-27638-27628-27643.onrender.com'];
         const origin = info.origin || '*';
 
-        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        if (allowedOrigins.includes(origin)) {
+            console.log(`Conexão permitida para origem: ${origin}`);
             callback(true);
         } else {
             console.log(`Acesso negado para origem: ${origin}`);
