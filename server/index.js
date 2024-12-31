@@ -2,15 +2,20 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import http from 'http';
+import cors from 'cors'; // Importando o pacote cors
 import { WebSocketServer } from 'ws';
 import authRoutes from './Routes/authRoutes.js';
-import {handleConnection } from './Controllers/auctionController.js';
+import { handleConnection } from './Controllers/auctionController.js';
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 8080;
+
+// Middleware para CORS
+app.use(cors()); // Configuração padrão para permitir todas as origens
+console.log("CORS configurado.");
 
 // Middleware para JSON
 app.use(express.json());
@@ -27,11 +32,6 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/auth', authRoutes);
 
 // Configuração do WebSocket
-
-console.log("A entrar no const wss");
-
-
-
 console.log("Configurando WebSocket...");
 
 const wss = new WebSocketServer({
@@ -69,8 +69,6 @@ wss.on('close', () => {
 });
 
 console.log("Eventos do WebSocketServer configurados.");
-
-
 
 // Inicia o servidor HTTP
 server.listen(port, () => {
