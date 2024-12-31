@@ -1,5 +1,5 @@
 import User from '../Models/userModel.js';
-import { verifyToken } from '../Config/jwtConfig.js';
+import { verifyToken } from '../config/jwtConfig.js';
 
 
 export const getProfile = async (req, res) => {

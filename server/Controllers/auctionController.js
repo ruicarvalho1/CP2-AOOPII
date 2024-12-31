@@ -72,7 +72,7 @@ async function auctionStarted(auction_id) {
     }
 }
 
- async function auctionEnded(auction_id) {
+export async function auctionEnded(auction_id) {
     try {
         const result = await Auction.updateOne(
             {_id: auction_id},
@@ -119,7 +119,7 @@ class AuctionInstance {
         setTimeout(async () => {
             console.log(`Timer de 1 minuto expirado para o leilão: ${this.auction_id}`);
             await this.finalize();
-        }, 360000);
+        }, 60000); // 60000ms = 1 minuto
     }
 
     async updateBid(id, bid_value, server) {
@@ -218,6 +218,7 @@ async function initializeAuctionInstance(auction_id, decoded) {
         auctionInstance.date_auction_started = Date.now();
     }
 
+    // Iniciar o timer de 1 minuto
     auctionInstance.startAuctionTimer();
 
     return auctionInstance;
@@ -345,11 +346,26 @@ function handleConnection(socket, server, req) {
     }
 }
 
+const server = new WebSocketServer({
+    port: 8080,
+    verifyClient: (info, callback) => {
+        const allowedOrigins = ['http://localhost:5173', 'undefined', '*', '*:*'];
+        const origin = info.origin || '*';
 
+        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+            callback(true);
+        } else {
+            console.log(`Acesso negado para origem: ${origin}`);
+            callback(false, 403, 'Acesso negado');
+        }
+    }
+});
+
+server.on('connection', (socket, req) => handleConnection(socket, server, req));
+
+console.log('Servidor WebSocket está a correr na porta 8080');
 
 export {
     handleAdminConnection,
     handleUserConnection,
-    auctionEnded,
-    handleConnection
 };
