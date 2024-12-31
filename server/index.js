@@ -27,6 +27,11 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/auth', authRoutes);
 
 // Configuração do WebSocket
+
+console.log("A entrar no const wss");
+
+
+
 const wss = new WebSocketServer({
     server,
     path: '/ws/auction/live',
@@ -35,6 +40,8 @@ const wss = new WebSocketServer({
         callback(true); // Permite todas as origens
     },
 });
+
+console.log("wss instancia")
 
 wss.on('connection', (socket, req) => {
     console.log(`Nova conexão recebida de: ${req.headers['origin'] || 'Desconhecida'}`);
