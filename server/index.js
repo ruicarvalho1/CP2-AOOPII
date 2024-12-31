@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import http from 'http';
 import { WebSocketServer } from 'ws';
 import authRoutes from './Routes/authRoutes.js';
-import { handleAdminConnection, handleUserConnection } from './Controllers/auctionController.js';
+import {handleConnection } from './Controllers/auctionController.js';
 
 dotenv.config();
 
@@ -29,27 +29,18 @@ app.use('/auth', authRoutes);
 // Configuração do WebSocket
 const wss = new WebSocketServer({
     server,
-    path: '/ws/auction/live', // Caminho relativo para WebSocket
+    path: '/ws/auction/live',
     verifyClient: (info, callback) => {
-        console.log('Verificando origem do cliente:', info.origin); // Depuração
+        console.log(`Conexão recebida de origem: ${info.origin}`);
         callback(true); // Permite todas as origens
-    }
+    },
 });
 
 wss.on('connection', (socket, req) => {
-    console.log('Nova conexão WebSocket recebida:', req.url); // Depuração da URL de conexão
-    const url = req.url || '';
-    if (url.includes('admin')) {
-        console.log('Conexão admin identificada.');
-        handleAdminConnection(socket, wss, req);
-    } else if (url.includes('user')) {
-        console.log('Conexão user identificada.');
-        handleUserConnection(socket, wss, req);
-    } else {
-        console.log('Conexão WebSocket sem tipo especificado');
-        socket.close(); // Fecha a conexão se não é reconhecida
-    }
+    console.log(`Nova conexão recebida de: ${req.headers['origin'] || 'Desconhecida'}`);
+    handleConnection(socket, wss, req); // Usar o handler centralizado
 });
+
 
 // Inicia o servidor HTTP
 server.listen(port, () => {

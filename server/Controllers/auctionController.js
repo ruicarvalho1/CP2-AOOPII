@@ -345,28 +345,11 @@ function handleConnection(socket, server, req) {
     }
 }
 
-const port = 10000; // Porta para produção no Render
-
-const server = new WebSocketServer({
-    port,
-    verifyClient: (info, callback) => {
-        // Permitir todas as origens
-        console.log(`Conexão recebida de origem: ${info.origin}`);
-        callback(true); // Sempre permite a conexão
-    },
-});
-
-console.log(`Websocket a correr na porta: ${port}`);
-
-
-server.on('connection', (socket, req) => {
-    console.log(`Nova conexão recebida de: ${req.headers['origin'] || 'Desconhecida'}`);
-    handleConnection(socket, server, req);
-});
 
 
 export {
     handleAdminConnection,
     handleUserConnection,
-    auctionEnded
+    auctionEnded,
+    handleConnection
 };
