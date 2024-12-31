@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import http from 'http';
-import cors from 'cors'; // Importando o pacote cors
+import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import authRoutes from './Routes/authRoutes.js';
 import { handleConnection } from './Controllers/auctionController.js';
@@ -20,10 +20,8 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Middleware para JSON
 app.use(express.json());
 
-// Conexão com MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -31,10 +29,8 @@ mongoose.connect(process.env.MONGO_URI, {
     .then(() => console.log('MongoDB conectado'))
     .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Rotas REST
 app.use('/auth', authRoutes);
 
-// Configuração do WebSocket
 console.log("Configurando WebSocket...");
 
 const wss = new WebSocketServer({
@@ -57,7 +53,6 @@ wss.on('connection', (socket, req) => {
     console.log(`Origem: ${req.headers.origin || 'Desconhecida'}`);
     console.log(`Endereço remoto: ${req.socket.remoteAddress || 'Desconhecido'}`);
 
-    // Log para acompanhamento da chamada do handler
     console.log("Chamando handleConnection...");
     handleConnection(socket, wss, req);
     console.log("handleConnection executado com sucesso.");
@@ -73,8 +68,22 @@ wss.on('close', () => {
 
 console.log("Eventos do WebSocketServer configurados.");
 
-// Inicia o servidor HTTP
 server.listen(port, () => {
     console.log(`Servidor HTTP disponível em: https://project-assignment-2-27638-27628-27643-3dd5.onrender.com`);
     console.log(`WebSockets disponíveis em: wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/ws/auction/live`);
+});
+
+// Cliente WebSocket
+const socket = new WebSocket('wss://project-assignment-2-27638-27628-27643-3dd5.onrender.com/ws/auction/live');
+
+socket.addEventListener('open', (event) => {
+    console.log('Conexão WebSocket aberta:', event);
+});
+
+socket.addEventListener('error', (error) => {
+    console.log('Erro na conexão WebSocket:', error);
+});
+
+socket.addEventListener('close', () => {
+    console.log('Conexão WebSocket fechada');
 });
