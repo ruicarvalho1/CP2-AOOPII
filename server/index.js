@@ -4,7 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import http from 'http';
 
-import authRoutes from './routes/authRoutes.js';
+import authRoutes from './Routes/authRoutes.js';
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://project-assignment-2-27638-27628-27643.onrender.com/',
     credentials: true,
 }));
 
