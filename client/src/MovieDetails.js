@@ -41,34 +41,6 @@ const MovieDetails = () => {
         fetchComments();
     }, [id]);
 
-    const handleCommentSubmit = async (e) => {
-        e.preventDefault();
-
-        const newCommentObj = {
-            text: newComment,
-            movieId: id,
-            date: new Date().toISOString(),
-        };
-
-        try {
-            const response = await fetch(`http://localhost:3002/auth/movies/${id}/comments`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newCommentObj),
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao enviar comentário');
-            }
-
-            setComments([...comments, newCommentObj]);
-            setNewComment('');
-        } catch (err) {
-            console.error('Erro ao enviar comentário:', err);
-        }
-    };
 
     if (!movie) {
         return <p>Carregando...</p>;
