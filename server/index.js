@@ -1,36 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import mongoose from 'mongoose';
 import http from 'http';
-
+import cors from 'cors';
 import authRoutes from './Routes/authRoutes.js';
+import { connectToDatabase } from './ConfigDatabase/databasemongoose.js';
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
-app.use(cors({
-    origin: 'https://project-assignment-2-27638-27628-27643.onrender.com',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
+app.use(cors());
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error(err));
+
+await connectToDatabase();
 
 
 app.use('/auth', authRoutes);
+
 
 server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

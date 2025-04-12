@@ -1,89 +1,108 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-
 
 const moviesSchema = new mongoose.Schema({
-    first_name: {
+    plot: {
         type: String,
         required: true
     },
-    last_name: {
+    poster: {
         type: String,
         required: true
     },
-    username: {
+    title: {
         type: String,
         required: true,
         unique: true
     },
-    email: {
+    fullplot: {
         type: String,
         required: true,
         unique: true,
         lowercase: true
     },
-    auth: {
-        platform: {
-            type: String,
-            required: true
-        },
-        password: {
-            type: String,
-            required: true
-        },
-        role: {
-            type: String,
-            enum: ['user', 'admin'],
-            default: 'user'
-        }
+    year: {
+        type: Number,
+        required: true
     },
-    credit_card: {
+    genres: {
+        type: [String],
+        required: true
+    },
+    directors: {
+        type: [String],
+        required: true
+    },
+    cast: {
+        type: [String],
+        required: true
+    },
+    languages: {
+        type: [String],
+        required: true
+    },
+    runtime: {
+        type: Number,
+        required: true
+    },
+    rated: {
         type: String,
         required: true
     },
-    image_profile: {
+    type: {
         type: String,
-        default: 'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-grey-photo-placeholder-illustrations-vectors-default-avatar-profile-icon-grey-photo-placeholder-99724602.jpg',
+        required: true
     },
-    account_creation_date: {
+    awards: {
+        wins: {
+            type: Number,
+            required: true
+        },
+        nominations: {
+            type: Number,
+            required: true
+        },
+        text: {
+            type: String,
+            required: true
+        }
+    },
+    imdb: {
+        rating: {
+            type: Number,
+            required: true
+        },
+        votes: {
+            type: Number,
+            required: true
+        },
+        id: {
+            type: String,
+            required: true
+        }
+    },
+    countries: {
+        type: [String],
+        required: true
+    },
+    released: {
         type: Date,
-        default: Date.now
+        required: true
     },
-    previous_auctions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Auction'
-    }],
-    won_auctions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Auction'
-    }]
+    tomatoes: {
+        type: mongoose.Schema.Types.Mixed
+    },
+    num_mflix_comments: {
+        type: Number,
+        default: 0
+    },
+    lastupdated: {
+        type: String
+    }
+}, {
+    timestamps: true,
+
 });
 
+const Movies = mongoose.model('movies', moviesSchema);
 
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('auth.password')) {
-        return next();
-    }
-
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.auth.password = await bcrypt.hash(this.auth.password, salt);
-        next();
-    } catch (error) {
-        return next(error);
-    }
-});
-
-
-userSchema.methods.comparePassword = async function (password) {
-    try {
-        return await bcrypt.compare(password, this.auth.password);
-    } catch (error) {
-        throw new Error('Erro ao comparar as senhas');
-    }
-};
-
-
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export default Movies;

@@ -1,59 +1,42 @@
-import User from '../Models/moviesModel.js';
-import { verifyToken } from '../Config/jwtConfig.js';
+import Movies from '../Models/moviesModel.js';
+import mongoose from 'mongoose';
 
-
-export const getProfile = async (req, res) => {
+export const getMovies = async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]; // Bearer token
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const sortBy = req.query.sortBy || 'title';
+        const order = req.query.order === 'desc' ? -1 : 1;
 
-        if (!token) {
-            return res.status(401).json({ message: 'Erro no Token' });
+        const movies = await Movies.find().sort({ [sortBy]: order }).skip(skip).limit(limit);
+
+        if (movies.length === 0) {
+            return res.status(404).json({ message: 'No movies found' });
         }
 
-        const decoded = verifyToken(token);
-
-        const user = await User.findById(decoded.id).select('-auth.password');
-
-        if (!user) {
-            return res.status(404).json({ message: 'User não encontrado' });
-        }
-
-
-        res.json({ user });
+        res.status(200).json({ page, limit, count: movies.length, movies });
     } catch (err) {
-        res.status(500).json({ message: 'Erro ao encontrar o perfil', error: err.message });
+        res.status(500).json({ message: 'Error fetching movies', error: err.message });
     }
 };
 
-export const updateProfile = async (req, res) => {
+export const getMovieById = async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]; // Bearer token
+        const { id } = req.params;
 
-        if (!token) {
-            return res.status(401).json({ message: 'Erro no Token' });
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid movie ID format' });
         }
 
-        const decoded = verifyToken(token);
+        const movie = await Movies.findById(id);
 
-        const user = await User.findById(decoded.id);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User não encontrado' });
+        if (!movie) {
+            return res.status(404).json({ message: 'Movie not found' });
         }
 
-        const {first_name, last_name, email, username,image_profile ,credit_card } = req.body;
-
-        user.first_name = first_name;
-        user.last_name = last_name;
-        user.email = email;
-        user.username = username;
-        user.image_profile = image_profile;
-        user.credit_card = credit_card;
-
-        await user.save();
-
-        res.json({ message: 'Perfil atualizado com sucesso', user });
+        res.status(200).json(movie);
     } catch (err) {
-        res.status(500).json({ message: 'Erro ao atualizar o perfil', error: err.message });
+        res.status(500).json({ message: 'Error fetching movie', error: err.message });
     }
-}
+};
