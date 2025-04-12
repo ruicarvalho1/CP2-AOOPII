@@ -11,13 +11,13 @@ const MoviesList = () => {
                 const response = await fetch('https://cp2-aoopii.onrender.com/auth/movies');
 
                 if (!response.ok) {
-                    throw new Error('Falha ao carregar filmes');
+                    throw new Error('Failed to load movies');
                 }
 
                 const data = await response.json();
                 setMovies(data.movies);
             } catch (err) {
-                console.error('Erro ao carregar filmes:', err);
+                console.error('Error loading movies:', err);
             }
         };
 
@@ -26,17 +26,17 @@ const MoviesList = () => {
 
     return (
         <div className="movies-list-container">
-            <h1>Lista de Filmes</h1>
+            <h1>Movies List</h1>
             {movies.length === 0 ? (
-                <p>Sem filmes disponíveis</p>
+                <p>No movies available</p>
             ) : (
                 <table className="movies-table">
                     <thead>
                     <tr>
-                        <th>Título</th>
-                        <th>Ano</th>
-                        <th>Gêneros</th>
-                        <th>Detalhes</th>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Genres</th>
+                        <th>Details</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,7 +46,7 @@ const MoviesList = () => {
                             <td>{movie.year}</td>
                             <td>{movie.genres.join(', ')}</td>
                             <td>
-                                <Link to={`/movie/${movie._id}`} className="details-link">Ver Detalhes</Link>
+                                <Link to={`/movie/${movie._id}`} className="details-link">View Details</Link>
                             </td>
                         </tr>
                     ))}

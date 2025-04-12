@@ -12,13 +12,13 @@ const MovieDetails = () => {
             try {
                 const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}`);
                 if (!response.ok) {
-                    throw new Error('Falha ao carregar o filme');
+                    throw new Error('Failed to load movie');
                 }
 
                 const data = await response.json();
                 setMovie(data);
             } catch (err) {
-                console.error('Erro ao carregar o filme:', err);
+                console.error('Error loading movie:', err);
             }
         };
 
@@ -26,13 +26,13 @@ const MovieDetails = () => {
             try {
                 const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}/comments`);
                 if (!response.ok) {
-                    throw new Error('Falha ao carregar os comentários');
+                    throw new Error('Failed to load comments');
                 }
 
                 const data = await response.json();
                 setComments(data);
             } catch (err) {
-                console.error('Erro ao carregar os comentários:', err);
+                console.error('Error loading comments:', err);
             }
         };
 
@@ -42,13 +42,12 @@ const MovieDetails = () => {
 
 
     if (!movie) {
-        return <p>Carregando...</p>;
+        return <p>Loading...</p>;
     }
-
 
     const tomatoes = movie.tomatoes || {};
     const criticRating = tomatoes.critic ? tomatoes.critic.meter : 'N/A';
-    const boxOffice = tomatoes.boxOffice || 'Não disponível';
+    const boxOffice = tomatoes.boxOffice || 'Not available';
     const website = tomatoes.website || '#';
 
     return (
@@ -59,33 +58,33 @@ const MovieDetails = () => {
                 </div>
                 <div className="movie-info">
                     <h1>{movie.title}</h1>
-                    <p><strong>Ano:</strong> {movie.year}</p>
-                    <p><strong>Gêneros:</strong> {movie.genres.join(', ')}</p>
-                    <p><strong>Elenco:</strong> {movie.cast.join(', ')}</p>
-                    <p><strong>Diretores:</strong> {movie.directors.join(', ')}</p>
-                    <p><strong>Classificação IMDb:</strong> {movie.imdb.rating}</p>
-                    <p><strong>Resumo:</strong> {movie.fullplot}</p>
-                    <p><strong>Tomates Críticos:</strong> {criticRating}%</p>
+                    <p><strong>Year:</strong> {movie.year}</p>
+                    <p><strong>Genres:</strong> {movie.genres.join(', ')}</p>
+                    <p><strong>Cast:</strong> {movie.cast.join(', ')}</p>
+                    <p><strong>Directors:</strong> {movie.directors.join(', ')}</p>
+                    <p><strong>IMDb Rating:</strong> {movie.imdb.rating}</p>
+                    <p><strong>Summary:</strong> {movie.fullplot}</p>
+                    <p><strong>Critic Tomatoes:</strong> {criticRating}%</p>
                     <p><strong>Box Office:</strong> {boxOffice}</p>
                     <p><strong>Website:</strong> <a href={website} target="_blank" rel="noopener noreferrer">{website}</a></p>
-                    <p><strong>Prêmios:</strong> {movie.awards.text}</p>
+                    <p><strong>Awards:</strong> {movie.awards.text}</p>
                     <p><strong>Metacritic:</strong> {movie.metacritic}</p>
-                    <p><strong>Duração:</strong> {movie.runtime} minutos</p>
-                    <p><strong>Línguas:</strong> {movie.languages.join(', ')}</p>
-                    <p><strong>Países:</strong> {movie.countries.join(', ')}</p>
-                    <p><strong>Data de lançamento:</strong> {new Date(movie.released).toLocaleDateString()}</p>
+                    <p><strong>Runtime:</strong> {movie.runtime} minutes</p>
+                    <p><strong>Languages:</strong> {movie.languages.join(', ')}</p>
+                    <p><strong>Countries:</strong> {movie.countries.join(', ')}</p>
+                    <p><strong>Release Date:</strong> {new Date(movie.released).toLocaleDateString()}</p>
                 </div>
             </div>
 
             <div className="movie-plot">
-                <h2>Resumo Completo</h2>
+                <h2>Full Plot</h2>
                 <p>{movie.plot}</p>
             </div>
 
             <div className="comments-section">
-                <h2>Comentários</h2>
+                <h2>Comments</h2>
                 {comments.length === 0 ? (
-                    <p>Sem comentários ainda.</p>
+                    <p>No comments yet.</p>
                 ) : (
                     <ul className="comments-list">
                         {comments.map((comment, index) => (
@@ -96,7 +95,6 @@ const MovieDetails = () => {
                         ))}
                     </ul>
                 )}
-
             </div>
         </div>
     );
