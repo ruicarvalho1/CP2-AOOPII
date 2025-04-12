@@ -10,7 +10,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/auth/movies/${id}`);
+                const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}`);
                 if (!response.ok) {
                     throw new Error('Falha ao carregar o filme');
                 }
@@ -24,7 +24,7 @@ const MovieDetails = () => {
 
         const fetchComments = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/auth/movies/${id}/comments`);
+                const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}/comments`);
                 if (!response.ok) {
                     throw new Error('Falha ao carregar os comentários');
                 }
