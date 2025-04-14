@@ -68,3 +68,66 @@
     color: #777;
     font-style: italic;
 }
+
+.movies-list-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.movies-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+.details-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.details-link:hover {
+    text-decoration: underline;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.pagination button {
+    margin: 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    background-color: #eee;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pagination button:hover {
+    background-color: #ccc;
+}
+
+.pagination button.active {
+    background-color: #333;
+    color: white;
+}
+
+.pagination button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}

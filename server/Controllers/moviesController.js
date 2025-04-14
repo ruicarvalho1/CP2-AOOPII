@@ -3,19 +3,13 @@ import mongoose from 'mongoose';
 
 export const getMovies = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        const sortBy = req.query.sortBy || 'title';
-        const order = req.query.order === 'desc' ? -1 : 1;
-
-        const movies = await Movies.find().sort({ [sortBy]: order }).skip(skip).limit(limit);
+        const movies = await Movies.find();
 
         if (movies.length === 0) {
             return res.status(404).json({ message: 'No movies found' });
         }
 
-        res.status(200).json({ page, limit, count: movies.length, movies });
+        res.status(200).json({ count: movies.length, movies });
     } catch (err) {
         res.status(500).json({ message: 'Error fetching movies', error: err.message });
     }
