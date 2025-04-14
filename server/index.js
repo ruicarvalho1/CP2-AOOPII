@@ -13,7 +13,7 @@ const port = process.env.PORT || 3002;
 
 
 app.use(cors({
-    origin: 'https://cp2-aoopii.onrender.com'
+    origin: 'https://cp2-aoopii-1.onrender.com',
 }));
 
 app.use(express.json());
