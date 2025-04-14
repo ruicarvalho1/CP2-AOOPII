@@ -10,7 +10,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const response = await fetch(`http://cp2-aoopii.onrender.com/auth/movies/${id}`);
+                const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to load movie');
                 }
@@ -24,7 +24,7 @@ const MovieDetails = () => {
 
         const fetchComments = async () => {
             try {
-                const response = await fetch(`http://cp2-aoopii.onrender.com/auth/movies/${id}/comments`);
+                const response = await fetch(`https://cp2-aoopii.onrender.com/auth/movies/${id}/comments`);
                 if (!response.ok) {
                     throw new Error('Failed to load comments');
                 }
