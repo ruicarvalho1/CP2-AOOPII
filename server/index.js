@@ -11,8 +11,10 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3002;
 
-app.use(cors());
-app.use(cors({ origin: '*' }));
+
+app.use(cors({
+    origin: 'https://cp2-aoopii.onrender.com'
+}));
 
 app.use(express.json());
 
