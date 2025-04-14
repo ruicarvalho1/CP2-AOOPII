@@ -11,7 +11,6 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3002;
 
-const cors = require('cors');
 
 app.use(cors({
     origin: 'https://cp2-aoopii-1.onrender.com'
