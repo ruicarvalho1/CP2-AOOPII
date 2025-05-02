@@ -12,7 +12,7 @@ const MoviesList = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await fetch('https://localhost:3002/auth/movies');
+                const response = await fetch('https://cp2-aoopii-2.onrender.com/auth/movies');
                 if (!response.ok) throw new Error('Failed to load movies');
                 const data = await response.json();
                 setMovies(data.movies);
