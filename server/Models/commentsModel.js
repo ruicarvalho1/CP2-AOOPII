@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
         ref: 'Movies',
         required: true
     },
+    username: { type: String, required: true },
     text: String,
     date: {
         type: Date,

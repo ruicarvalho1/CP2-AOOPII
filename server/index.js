@@ -13,7 +13,8 @@ const port = process.env.PORT || 3002;
 
 
 app.use(cors({
-    origin: 'https://cp2-aoopii-1.onrender.com',
+    origin: 'http://localhost:3001',
+    credentials: true
 }));
 
 app.use(express.json());

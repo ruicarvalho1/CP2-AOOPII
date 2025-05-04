@@ -1,0 +1,200 @@
+.movie-detail-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: 'Arial', sans-serif;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.movie-header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30px;
+}
+
+.movie-poster img {
+    max-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.movie-info {
+    padding-left: 20px;
+    max-width: 800px;
+}
+
+.movie-info h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.movie-info p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.movie-info a {
+    color: #000;
+    text-decoration: none;
+}
+
+
+.movie-plot {
+    margin-top: 30px;
+}
+
+.movie-plot h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.movie-plot p {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.comments-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #222;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.no-comments {
+    font-style: italic;
+    color: #777;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-box {
+    background-color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border-left: 5px solid #024ea3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.comment-user {
+    font-weight: bold;
+}
+
+.comment-text {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+.add-comment {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-comment textarea {
+    resize: vertical;
+    min-height: 60px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.add-comment button {
+    align-self: flex-end;
+    padding: 8px 14px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-comment button:hover {
+    background-color: #0056b3;
+}
+
+.comment-box .delete-btn {
+    margin-top: 8px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-box .delete-btn:hover {
+    background-color: #b02a37;
+}
+
+.weather-widget {
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-weight: 500;
+    max-width: 200px;
+}
+
+.weather-widget-wrapper {
+    margin-top: 1rem;
+    align-self: center;
+}
+
+
+@media (max-width: 768px) {
+    .movie-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .movie-poster img {
+        max-width: 250px;
+        margin-bottom: 20px;
+    }
+
+    .movie-info {
+        padding-left: 0;
+    }
+
+    .movie-info h1 {
+        font-size: 2rem;
+    }
+
+    .movie-info p {
+        font-size: 1rem;
+    }
+}
+
+

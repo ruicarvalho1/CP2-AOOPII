@@ -7,7 +7,7 @@ const moviesSchema = new mongoose.Schema({
     },
     poster: {
         type: String,
-        required: true
+        required: false
     },
     title: {
         type: String,
