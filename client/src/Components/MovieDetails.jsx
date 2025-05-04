@@ -46,7 +46,7 @@ const MovieDetails = () => {
 
     const fetchProfile = async (token) => {
         try {
-            const response = await fetch('http://localhost:3002/auth/profile', {
+            const response = await fetch('https://cp2-aoopii-2.onrender.com/auth/profile', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.status === 401 || response.status === 403) return handleAuthError(response.status);
@@ -68,7 +68,7 @@ const MovieDetails = () => {
     const fetchMovie = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3002/auth/movies/${id}`, {
+            const response = await fetch(`https://cp2-aoopii-2.onrender.com/auth/movies/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.status === 401 || response.status === 403) return handleAuthError(response.status);
@@ -86,7 +86,7 @@ const MovieDetails = () => {
     const fetchComments = async (page = 1) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3002/auth/movies/${id}/comments?page=${page}&limit=${commentsPerPage}`, {
+            const response = await fetch(`https://cp2-aoopii-2.onrender.com/auth/movies/${id}/comments?page=${page}&limit=${commentsPerPage}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.status === 401 || response.status === 403) return handleAuthError(response.status);
@@ -106,7 +106,7 @@ const MovieDetails = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3002/auth/movies/${id}/comments`, {
+            const response = await fetch(`https://cp2-aoopii-2.onrender.com/auth/movies/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const MovieDetails = () => {
     const handleDeleteComment = async (commentId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:3002/auth/comments/${commentId}`, {
+            const response = await fetch(`https://cp2-aoopii-2.onrender.com/auth/comments/${commentId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

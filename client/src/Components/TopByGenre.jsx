@@ -21,7 +21,7 @@ const TopByGenre = () => {
 
     const fetchGenres = async () => {
         try {
-            const res = await fetch('http://localhost:3002/auth/movies?page=1', {
+            const res = await fetch('https://cp2-aoopii-2.onrender.com/auth/movies?page=1', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
@@ -40,7 +40,7 @@ const TopByGenre = () => {
 
     const fetchTopByGenre = async (genre) => {
         try {
-            const res = await fetch(`http://localhost:3002/auth/movies/top-by-genre?genre=${genre}`, {
+            const res = await fetch(`https://cp2-aoopii-2.onrender.com/auth/movies/top-by-genre?genre=${genre}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();

@@ -61,7 +61,7 @@ const EditMovieModal = ({ movie, isOpen, onClose, onUpdated }) => {
                 poster: formData.poster.trim() === '' ? null : formData.poster.trim()
             };
 
-            const response = await fetch(`http://localhost:3002/auth/movies/${movie._id}`, {
+            const response = await fetch(`https://cp2-aoopii-2.onrender.com/auth/movies/${movie._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

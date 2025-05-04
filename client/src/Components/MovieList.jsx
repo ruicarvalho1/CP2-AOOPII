@@ -44,7 +44,7 @@ const MoviesList = () => {
             if (!token) throw new Error('Token not found');
 
             const response = await fetch(
-                `http://localhost:3002/auth/movies?page=${page}&search=${encodeURIComponent(query)}`,
+                `https://cp2-aoopii-2.onrender.com/auth/movies?page=${page}&search=${encodeURIComponent(query)}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -105,13 +105,10 @@ const MoviesList = () => {
                 </div>
             </div>
 
-            {/* Top 5 por género */}
             <TopByGenre />
 
-            {/* Linha divisória */}
             <hr className="divider-line" />
 
-            {/* Pesquisa, filmes e paginação */}
             <h2 className="section-title">🎬 All Movies</h2>
 
             <input
