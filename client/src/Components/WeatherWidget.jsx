@@ -9,12 +9,12 @@ const WeatherWidget = ({ country }) => {
         const fetchCityId = async () => {
             try {
                 const query = country === 'USA' ? 'New York,US' : country;
-                const res = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${API_KEY}`);
+                const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${API_KEY}`);
                 const data = await res.json();
                 if (data.length > 0) {
                     const { lat, lon } = data[0];
 
-                    const cityRes = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
+                    const cityRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
                     const cityData = await cityRes.json();
 
                     if (cityData.id) {
